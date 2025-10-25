@@ -1,13 +1,11 @@
 using UnityEngine;
 
-public class ScreenFishMovement : MonoBehaviour
+public class UserFish : MonoBehaviour
 {
-    public float speed = 2f;                  // Movement speed
-    public float changeDirectionTime = 3f;    // How often to randomize direction
-    public float bottomBuffer = 0.5f;           // How far above the bottom edge the fish can go
+    public float speed = 2f;                   // Movement speed
+    public float bottomBuffer = 0.5f;          // How far above the bottom edge the fish can go
+    public QuizManager quizManager;            // Reference to QuizManager for showing questions
 
-    private Vector2 direction;
-    private float timer;
     private Camera mainCam;
     private Vector2 screenMin;
     private Vector2 screenMax;
@@ -16,59 +14,40 @@ public class ScreenFishMovement : MonoBehaviour
     {
         mainCam = Camera.main;
         UpdateScreenBounds();
-        PickNewDirection();
     }
 
     void Update()
     {
-        timer += Time.deltaTime;
         UpdateScreenBounds();
 
-        // Move the fish
-        transform.Translate(direction * speed * Time.deltaTime, Space.World);
+        // ✅ Move steadily to the right
+        transform.Translate(Vector2.right * speed * Time.deltaTime, Space.World);
 
-        // Flip sprite if needed
-        if (direction.x > 0 && transform.localScale.x < 0)
-            Flip();
-        else if (direction.x < 0 && transform.localScale.x > 0)
-            Flip();
+        // ✅ Flip sprite if needed (face right)
+        Vector3 scale = transform.localScale;
+        if (scale.x < 0)
+        {
+            scale.x *= -1;
+            transform.localScale = scale;
+        }
 
-        // Check screen boundaries (bounce back)
+        // ✅ Keep fish within screen horizontally (loop around)
         Vector3 pos = transform.position;
 
-        if (pos.x < screenMin.x || pos.x > screenMax.x)
+        if (pos.x > screenMax.x)
         {
-            direction.x *= -1;
-            Flip();
-            pos.x = Mathf.Clamp(pos.x, screenMin.x, screenMax.x);
+            pos.x = screenMin.x; // reappear from the left
         }
 
-        // Bottom limit adjusted by buffer
+        // ✅ Keep it within vertical range
         float adjustedMinY = screenMin.y + bottomBuffer;
-        if (pos.y < adjustedMinY || pos.y > screenMax.y)
-        {
-            direction.y *= -1;
-            pos.y = Mathf.Clamp(pos.y, adjustedMinY, screenMax.y);
-        }
+        pos.y = Mathf.Clamp(pos.y, adjustedMinY, screenMax.y);
 
         transform.position = pos;
-
-        // Occasionally change direction
-        if (timer >= changeDirectionTime)
-        {
-            PickNewDirection();
-        }
-    }
-
-    void PickNewDirection()
-    {
-        direction = new Vector2(Random.Range(-1f, 1f), Random.Range(-0.5f, 0.5f)).normalized;
-        timer = 0f;
     }
 
     void UpdateScreenBounds()
     {
-        // Convert screen corners to world coordinates
         Vector3 bottomLeft = mainCam.ScreenToWorldPoint(Vector3.zero);
         Vector3 topRight = mainCam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
 
@@ -76,11 +55,19 @@ public class ScreenFishMovement : MonoBehaviour
         screenMax = new Vector2(topRight.x, topRight.y);
     }
 
-    void Flip()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
+        if (other.CompareTag("Fish") || other.CompareTag("Player"))
+        {
+            Debug.Log("Fish collision detected!");
+
+            Time.timeScale = 0f;
+
+            if (quizManager != null)
+                quizManager.ShowQuiz();
+            else
+                Debug.LogWarning("QuizManager not assigned in the Inspector!");
+        }
     }
 }
 
