@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class QuizFish : MonoBehaviour
 {
-    public float speed = 2f;                // Movement speed
-    public QuizManager quizManager;         // Reference to QuizManager (assign in Inspector)
-    private bool hasTriggered = false;      // Prevents multiple quiz triggers
+    public float speed = 2f;
+    public QuizManager quizManager;
+    private bool hasTriggered = false;
     private Camera mainCam;
     private Vector2 screenMin;
     private Vector2 screenMax;
@@ -14,26 +14,24 @@ public class QuizFish : MonoBehaviour
         mainCam = Camera.main;
         UpdateScreenBounds();
 
-        // Try to find QuizManager automatically if not assigned
         if (quizManager == null)
             quizManager = FindFirstObjectByType<QuizManager>();
     }
 
     void Update()
     {
-        // Move left continuously
+        // Move left
         transform.Translate(Vector2.left * speed * Time.deltaTime, Space.World);
 
-        // Flip sprite so it faces left (if needed)
+        // Ensure facing left
         if (transform.localScale.x > 0)
             Flip();
 
-        // Keep fish inside screen bounds (optional)
+        // Wrap horizontally
         Vector3 pos = transform.position;
         if (pos.x < screenMin.x)
-        {
-            pos.x = screenMax.x; // Wrap to the right side (loop)
-        }
+            pos.x = screenMax.x;
+
         transform.position = pos;
     }
 
@@ -47,11 +45,9 @@ public class QuizFish : MonoBehaviour
             Time.timeScale = 0f;
 
             if (quizManager != null)
-                quizManager.ShowQuiz();
+                quizManager.ShowQuiz(gameObject);
             else
                 Debug.LogWarning("QuizManager not assigned in QuizFish!");
-
-            Destroy(gameObject, 0.3f);
         }
     }
 
