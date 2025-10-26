@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections;
 
 public class QuizManager : MonoBehaviour
 {
@@ -9,9 +10,13 @@ public class QuizManager : MonoBehaviour
     public TextMeshProUGUI questionText;
     public TMP_InputField answerInput;
     public Button submitButton;
-    public TextMeshProUGUI feedbackText; 
+    public TextMeshProUGUI feedbackText;
+
+    [Header("Control Panel Reference")]
+    public GameObject arrowKeys;
 
     private GameObject targetFish;
+    private string correctAnswer = "";
 
     private void Start()
     {
@@ -26,21 +31,58 @@ public class QuizManager : MonoBehaviour
         // Assign button listener
         if (submitButton != null)
             submitButton.onClick.AddListener(OnSubmitAnswer);
+
+        // Ensure arrow keys panel is visible when the game starts
+        if (arrowKeys != null)
+            arrowKeys.SetActive(true);
     }
 
-    // Called by UserFish or QuizFish when a quiz is triggered
+    // === QUIZ 1 ===
     public void ShowQuiz(GameObject fishToRemove)
+    {
+        SetupQuiz(fishToRemove, "What is 5 + 3?", "8");
+    }
+
+    // === QUIZ 2 ===
+    public void ShowQuiz2(GameObject fishToRemove)
+    {
+        SetupQuiz(fishToRemove, "What color do you get when you mix red and blue?", "purple");
+    }
+
+    // === QUIZ 3 ===
+    public void ShowQuiz3(GameObject fishToRemove)
+    {
+        SetupQuiz(fishToRemove, "What planet is known as the Red Planet?", "mars");
+    }
+
+    // === QUIZ 4 ===
+    public void ShowQuiz4(GameObject fishToRemove)
+    {
+        SetupQuiz(fishToRemove, "How many sides does a triangle have?", "3");
+    }
+
+    // === QUIZ 5 ===
+    public void ShowQuiz5(GameObject fishToRemove)
+    {
+        SetupQuiz(fishToRemove, "What is the largest mammal on Earth?", "blue whale");
+    }
+
+    // === Common Quiz Setup Function ===
+    private void SetupQuiz(GameObject fishToRemove, string question, string answer)
     {
         if (quizPanel != null)
         {
             quizPanel.SetActive(true);
             Time.timeScale = 0f; // Pause game
 
-            // Store the fish reference
+            if (arrowKeys != null)
+                arrowKeys.SetActive(false);
+
             targetFish = fishToRemove;
+            correctAnswer = answer.ToLower();
 
             // --- Style Setup ---
-            questionText.text = "What is 5 + 3?";
+            questionText.text = question;
             questionText.fontSize = 36f;
             questionText.alignment = TextAlignmentOptions.Center;
             questionText.color = Color.black;
@@ -74,38 +116,40 @@ public class QuizManager : MonoBehaviour
         }
     }
 
+    // === SUBMIT ANSWER ===
     private void OnSubmitAnswer()
     {
-        string userAnswer = answerInput.text.Trim();
+        string userAnswer = answerInput.text.Trim().ToLower();
 
         if (feedbackText != null)
         {
-            if (userAnswer == "8") // Correct answer
+            if (userAnswer == correctAnswer)
             {
-                feedbackText.text = "Correct!";
+                feedbackText.text = "✅ Correct!";
                 feedbackText.color = Color.green;
 
                 // Grow the UserFish only after correct answer
                 UserFish user = FindFirstObjectByType<UserFish>();
-                if (user != null)
-                    user.transform.localScale *= 1.2f;
+                if (user == null)
+                    Debug.LogWarning("⚠️ UserFish not found in scene!");
+                else
+                    user.transform.localScale *= 1.2f; // Small growth per quiz
 
                 // Destroy the QuizFish after short delay
                 StartCoroutine(CloseQuizAfterDelay(1f));
             }
             else
             {
-                feedbackText.text = "Incorrect! Try again.";
+                feedbackText.text = "❌ Incorrect! Try again.";
                 feedbackText.color = Color.red;
             }
         }
     }
 
-    private System.Collections.IEnumerator CloseQuizAfterDelay(float delay)
+    private IEnumerator CloseQuizAfterDelay(float delay)
     {
         yield return new WaitForSecondsRealtime(delay);
 
-        // Destroy the fish if it still exists
         if (targetFish != null)
             Destroy(targetFish);
 
@@ -114,9 +158,16 @@ public class QuizManager : MonoBehaviour
 
     public void HideQuiz()
     {
-        quizPanel.SetActive(false);
-        Time.timeScale = 1f; // Resume game
+        if (quizPanel != null)
+            quizPanel.SetActive(false);
+
+        Time.timeScale = 1f;
         targetFish = null;
+
+        if (arrowKeys != null)
+            arrowKeys.SetActive(true);
+
+        Debug.Log("Quiz closed — arrow keys re-enabled!");
     }
 }
 

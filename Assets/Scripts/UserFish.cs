@@ -4,7 +4,7 @@ public class UserFish : MonoBehaviour
 {
     [Header("Movement Settings")]
     public float speed = 5f;             // Movement speed
-    public QuizManager quizManager;       // Reference to QuizManager for quiz popups
+    public QuizManager quizManager;      // Reference to QuizManager for quiz popups
 
     private Camera mainCam;
     private Vector2 screenMin;
@@ -12,9 +12,14 @@ public class UserFish : MonoBehaviour
     private bool canTrigger = false;      // Grace period to prevent early collisions
 
     private Vector2 moveDirection = Vector2.zero; // Movement direction from arrow buttons
+    private Rigidbody2D rb;               // Rigidbody2D reference
 
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
+        if (rb == null)
+            Debug.LogError("Rigidbody2D missing on UserFish! Add one to detect collisions properly.");
+
         mainCam = Camera.main;
 
         if (mainCam == null)
@@ -22,53 +27,53 @@ public class UserFish : MonoBehaviour
 
         UpdateScreenBounds();
 
-        // Find QuizManager automatically if not assigned
         if (quizManager == null)
             quizManager = FindFirstObjectByType<QuizManager>();
 
-        // Enable collisions after a short grace period
         Invoke(nameof(EnableTrigger), 0.5f);
     }
 
-    void EnableTrigger()
-    {
-        canTrigger = true;
-    }
+    void EnableTrigger() => canTrigger = true;
 
     void Update()
     {
         UpdateScreenBounds();
+    }
+
+    void FixedUpdate()
+    {
         MovePlayer();
     }
 
     void MovePlayer()
     {
-        // Apply movement based on button input
-        transform.Translate(moveDirection * speed * Time.deltaTime, Space.World);
+        if (rb == null) return;
 
-        // Flip sprite horizontally based on horizontal movement
+        Vector2 newPos = rb.position + moveDirection * speed * Time.fixedDeltaTime;
+        rb.MovePosition(newPos);
+
+        // Flip sprite horizontally
         Vector3 scale = transform.localScale;
-        if (moveDirection.x > 0) scale.x = Mathf.Abs(scale.x);      // Face right
-        else if (moveDirection.x < 0) scale.x = -Mathf.Abs(scale.x); // Face left
+        if (moveDirection.x > 0) scale.x = Mathf.Abs(scale.x);
+        else if (moveDirection.x < 0) scale.x = -Mathf.Abs(scale.x);
         transform.localScale = scale;
 
-        // Clamp within screen bounds
+        // Clamp within bounds
         Vector3 pos = transform.position;
         pos.x = Mathf.Clamp(pos.x, screenMin.x, screenMax.x);
         pos.y = Mathf.Clamp(pos.y, screenMin.y, screenMax.y);
         transform.position = pos;
     }
 
-   void UpdateScreenBounds()
+    void UpdateScreenBounds()
     {
         if (mainCam == null)
         {
             mainCam = Camera.main;
             if (mainCam == null)
-                return; // no camera found yet
+                return;
         }
 
-        // Skip if the camera isn't rendering properly (Device Simulator does this briefly)
         if (mainCam.pixelWidth <= 1 || mainCam.pixelHeight <= 1)
             return;
 
@@ -80,52 +85,27 @@ public class UserFish : MonoBehaviour
         screenMax = new Vector2(topRight.x, topRight.y);
     }
 
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!canTrigger) return;
 
         if (other.CompareTag("QuizFish"))
         {
-            Debug.Log("User collided with QuizFish — showing quiz!");
+            Debug.Log("✅ User collided with QuizFish — showing quiz!");
             Time.timeScale = 0f;
 
             if (quizManager != null)
-                quizManager.ShowQuiz(other.gameObject); // Pass the QuizFish reference
+                quizManager.ShowQuiz(other.gameObject);
             else
                 Debug.LogWarning("QuizManager not assigned in UserFish!");
         }
     }
 
-    public void MoveUp()    
-    { 
-        moveDirection = Vector2.up; 
-        Debug.Log("MoveUp() pressed — moving up"); 
-    }
-
-    public void MoveDown()  
-    { 
-        moveDirection = Vector2.down; 
-        Debug.Log("MoveDown() pressed — moving down"); 
-    }
-
-    public void MoveLeft()  
-    { 
-        moveDirection = Vector2.left; 
-        Debug.Log("MoveLeft() pressed — moving left"); 
-    }
-
-    public void MoveRight() 
-    { 
-        moveDirection = Vector2.right; 
-        Debug.Log("MoveRight() pressed — moving right"); 
-    }
-
-    public void StopMove()  
-    { 
-        moveDirection = Vector2.zero; 
-        Debug.Log("StopMove() pressed — stopping movement"); 
-    }
-
+    // Movement control
+    public void MoveUp()    { moveDirection = Vector2.up; Debug.Log("MoveUp() pressed"); }
+    public void MoveDown()  { moveDirection = Vector2.down; Debug.Log("MoveDown() pressed"); }
+    public void MoveLeft()  { moveDirection = Vector2.left; Debug.Log("MoveLeft() pressed"); }
+    public void MoveRight() { moveDirection = Vector2.right; Debug.Log("MoveRight() pressed"); }
+    public void StopMove()  { moveDirection = Vector2.zero; Debug.Log("StopMove() pressed"); }
 }
 

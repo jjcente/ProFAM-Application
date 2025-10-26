@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class QuizFish : MonoBehaviour
+public class QuizFish2 : MonoBehaviour
 {
     public float speed = 2f;
     public QuizManager quizManager;
@@ -110,4 +110,5 @@ public class QuizFish : MonoBehaviour
         transform.localScale = scale;
     }
 }
+
 
