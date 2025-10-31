@@ -16,6 +16,9 @@ public class NPCManager : MonoBehaviour
             npc.SetActive(false);
         }
 
+        // 🔀 Randomize NPC order
+        ShuffleNPCs();
+
         SpawnNextNPC(); // Start with the first one
     }
 
@@ -41,6 +44,18 @@ public class NPCManager : MonoBehaviour
         else
         {
             Debug.Log("✅ All NPCs finished!");
+        }
+    }
+
+    // 🔁 Function to shuffle NPC list
+    private void ShuffleNPCs()
+    {
+        for (int i = 0; i < npcs.Count; i++)
+        {
+            GameObject temp = npcs[i];
+            int randomIndex = Random.Range(i, npcs.Count);
+            npcs[i] = npcs[randomIndex];
+            npcs[randomIndex] = temp;
         }
     }
 }

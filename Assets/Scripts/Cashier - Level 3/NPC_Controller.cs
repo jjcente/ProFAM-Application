@@ -12,11 +12,15 @@ public class NPCController : MonoBehaviour
     public Transform defaultDialoguePosition; // Default dialogue position (before moving)
     public float moveSpeed = 2f;
     public TextMeshProUGUI dialogueText;
-    public TextMeshProUGUI timerText;   // ⏱️ Timer display text
+    public TextMeshProUGUI timerText;   // Timer display text (no clock icon)
     public GameObject dialogueCanvas;
-    public GameObject choicePanel;   // Panel containing 3 answer buttons
-    public Button[] choiceButtons;   // The 3 buttons inside the panel
+    public GameObject choicePanel;      // Panel containing 3 answer buttons
+    public Button[] choiceButtons;      // The 3 buttons inside the panel
     public NPCManager manager;
+
+    // 🎵 Audio
+    public AudioSource correctAnswerAudio;  // For correct answer sound
+    public AudioSource wrongAnswerAudio;    // For wrong answer sound
 
     private bool movingToCounter = true;
     private bool interacted = false;
@@ -92,7 +96,6 @@ public class NPCController : MonoBehaviour
         isInteracting = true;
         movingToCounter = false;
 
-        // Pick a random unused question
         if (questions.Count == 0)
         {
             dialogueText.text = "No more questions left!";
@@ -106,26 +109,25 @@ public class NPCController : MonoBehaviour
         currentQuestion = questions[randomIndex].question;
         currentAnswer = questions[randomIndex].answer;
         string[] choices = questions[randomIndex].choices;
-        questions.RemoveAt(randomIndex); // remove to avoid repetition
+        questions.RemoveAt(randomIndex);
 
-        // Show question text near counter first
+        // Show question
         if (dialogueCanvas != null)
             dialogueCanvas.SetActive(true);
 
         if (dialogueText != null)
             dialogueText.text = currentQuestion;
 
-        // Wait 4 seconds before moving dialogue to top of the screen
         yield return new WaitForSeconds(4f);
 
-        // Move the dialogue box to the top of the screen (world space)
+        // Move dialogue to top
         if (topScreenPosition != null && dialogueCanvas != null)
         {
             dialogueCanvas.transform.position = topScreenPosition.position;
             dialogueCanvas.transform.rotation = topScreenPosition.rotation;
         }
 
-        // Now show multiple choice buttons
+        // Show choices
         if (choicePanel != null)
         {
             choicePanel.SetActive(true);
@@ -140,7 +142,6 @@ public class NPCController : MonoBehaviour
                 shuffled[random] = temp;
             }
 
-            // Assign text & listeners
             for (int i = 0; i < choiceButtons.Length; i++)
             {
                 if (i < shuffled.Count)
@@ -148,14 +149,17 @@ public class NPCController : MonoBehaviour
                     string answer = shuffled[i];
                     choiceButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = answer;
                     choiceButtons[i].onClick.RemoveAllListeners();
-                    choiceButtons[i].onClick.AddListener(() => SubmitChoice(answer));
+                    choiceButtons[i].onClick.AddListener(() =>
+                    {
+                        SubmitChoice(answer);
+                    });
                 }
             }
         }
 
         waitingForAnswer = true;
 
-        // Start 10-second timer for answering
+        // Start 10-second timer
         answerTimerCoroutine = StartCoroutine(AnswerTimer());
 
         yield return new WaitUntil(() => !waitingForAnswer);
@@ -170,26 +174,33 @@ public class NPCController : MonoBehaviour
         isInteracting = false;
     }
 
-    // Called when a choice button is clicked
     public void SubmitChoice(string selectedAnswer)
     {
         if (!waitingForAnswer) return;
 
         StopCoroutine(answerTimerCoroutine);
 
-        string result = selectedAnswer == currentAnswer ? "Correct! Great job!" : $"Wrong! The correct answer is {currentAnswer}.";
+        string result;
 
-        // Hide choices
+        if (selectedAnswer == currentAnswer)
+        {
+            result = "Here's Your Change!";
+            PlayCorrectSound();
+        }
+        else
+        {
+            result = $"Wrong! The correct answer is {currentAnswer}.";
+            PlayWrongSound();
+        }
+
         if (choicePanel != null)
             choicePanel.SetActive(false);
 
-        // Show result and move back to default position
         StartCoroutine(ShowResultAndReturn(result));
     }
 
     IEnumerator ShowResultAndReturn(string result)
     {
-        // Move dialogue back to default position
         if (defaultDialoguePosition != null && dialogueCanvas != null)
         {
             dialogueCanvas.transform.position = defaultDialoguePosition.position;
@@ -224,7 +235,7 @@ public class NPCController : MonoBehaviour
             timer -= Time.deltaTime;
 
             if (timerText != null)
-                timerText.text = " " + Mathf.CeilToInt(timer).ToString() + "s";
+                timerText.text = Mathf.CeilToInt(timer).ToString() + "s";
 
             yield return null;
 
@@ -243,12 +254,26 @@ public class NPCController : MonoBehaviour
         }
 
         if (dialogueText != null)
-            dialogueText.text = "⏰ Time’s up!";
+            dialogueText.text = "Time’s up!!";
 
         if (timerText != null)
             timerText.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(2f);
         waitingForAnswer = false;
+    }
+
+    // ✅ Correct answer sound
+    public void PlayCorrectSound()
+    {
+        if (correctAnswerAudio != null && correctAnswerAudio.clip != null)
+            correctAnswerAudio.Play();
+    }
+
+    // ❌ Wrong answer sound
+    public void PlayWrongSound()
+    {
+        if (wrongAnswerAudio != null && wrongAnswerAudio.clip != null)
+            wrongAnswerAudio.Play();
     }
 }
