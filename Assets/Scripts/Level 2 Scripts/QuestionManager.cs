@@ -1,15 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using TMPro;
 
 public class QuestionManager : MonoBehaviour
 {
     public static QuestionManager Instance { get; private set; }
 
     public GameObject panel;        // assign QuestionPanel (UI)
-    public Text questionText;       // UI Text
+    public TMP_Text  questionText;       // UI Text
     public Button[] answerButtons;  // 4 buttons
-    public Text[] answerTexts;      // labels on those buttons
+    public TMP_Text [] answerTexts;      // labels on those buttons
 
     private Bomb currentBomb;
     private Action<bool> answerCallback;

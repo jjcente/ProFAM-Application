@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3264159092166422907}
   - component: {fileID: 2104853035310211215}
   - component: {fileID: 3822711564713643278}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,7 +129,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0.01, y: -0.03}
-  m_Radius: 0.43
+  m_Radius: 0.5
 --- !u!50 &3264159092166422907
 Rigidbody2D:
   serializedVersion: 5
@@ -156,7 +156,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 7
+  m_Constraints: 0
 --- !u!114 &2104853035310211215
 MonoBehaviour:
   m_ObjectHideFlags: 0
