@@ -204,8 +204,8 @@ Transform:
   m_GameObject: {fileID: 44167082}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0274, y: 0.2037, z: 0}
-  m_LocalScale: {x: 3.075029, y: 2.9094281, z: 1}
+  m_LocalPosition: {x: -0.0274, y: 0.0383, z: 0}
+  m_LocalScale: {x: 3.075029, y: 3.011549, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1329,7 +1329,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScreenFishMovement
   speed: 2
-  changeDirectionTime: 3
   bottomBuffer: 0.7
   quizManager: {fileID: 0}
 --- !u!50 &1246441738
