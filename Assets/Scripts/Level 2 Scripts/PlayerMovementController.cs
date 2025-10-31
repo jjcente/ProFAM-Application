@@ -4,7 +4,7 @@ public class PlayerMovementController : MonoBehaviour
 {
    public Rigidbody2D rigid { get; private set; }
     private Vector2 direction = Vector2.down;
-    public float speed = 5f;
+    public float speed = 3f;
 
     public KeyCode inputUp = KeyCode.UpArrow;
     public KeyCode inputDown = KeyCode.DownArrow;
@@ -17,6 +17,8 @@ public class PlayerMovementController : MonoBehaviour
     public Animation spriteRendererRight;
     private Animation activeSprite;
        
+    private Vector2 uiDirection = Vector2.zero;
+
 
     private void Awake()
     {
@@ -26,30 +28,15 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(inputUp))
-        {
-            Debug.Log("Up pressed");
-            SetDirection(Vector2.up, spriteRendererUp);
-        }
-        else if (Input.GetKey(inputDown))
-        {
-            Debug.Log("Down pressed");
-            SetDirection(Vector2.down, spriteRendererDown);
-        }
-        else if (Input.GetKey(inputLeft))
-        {
-            Debug.Log("Left pressed");
-            SetDirection(Vector2.left, spriteRendererLeft);
-        }
-        else if (Input.GetKey(inputRight))
-        {
-            Debug.Log("Right pressed");
-            SetDirection(Vector2.right, spriteRendererRight);
-        }
-        else
-        {
-            SetDirection(Vector2.zero, activeSprite);
-        }
+    Vector2 finalDirection = uiDirection != Vector2.zero ? uiDirection : GetKeyboardDirection();
+
+    if (finalDirection == Vector2.up) SetDirection(Vector2.up, spriteRendererUp);
+    else if (finalDirection == Vector2.down) SetDirection(Vector2.down, spriteRendererDown);
+    else if (finalDirection == Vector2.left) SetDirection(Vector2.left, spriteRendererLeft);
+    else if (finalDirection == Vector2.right) SetDirection(Vector2.right, spriteRendererRight);
+    else SetDirection(Vector2.zero, activeSprite);
+
+        
     }
 
     private void FixedUpdate()
@@ -77,4 +64,18 @@ public class PlayerMovementController : MonoBehaviour
 
     }
 
+    private Vector2 GetKeyboardDirection()
+{
+    if (Input.GetKey(inputUp)) return Vector2.up;
+    if (Input.GetKey(inputDown)) return Vector2.down;
+    if (Input.GetKey(inputLeft)) return Vector2.left;
+    if (Input.GetKey(inputRight)) return Vector2.right;
+    return Vector2.zero;
+}
+
+ public void MoveUpUI()    => uiDirection = Vector2.up;
+public void MoveDownUI()  => uiDirection = Vector2.down;
+public void MoveLeftUI()  => uiDirection = Vector2.left;
+public void MoveRightUI() => uiDirection = Vector2.right;
+public void StopMoveUI()  => uiDirection = Vector2.zero;
 }
