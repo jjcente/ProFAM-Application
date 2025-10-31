@@ -8,8 +8,8 @@ public class NPCController : MonoBehaviour
     public Transform exitPoint;
     public float moveSpeed = 2f;
     public TextMeshProUGUI dialogueText;
-    public GameObject dialogueCanvas; // ✅ Add reference to the entire dialogue box canvas
-    public NPCSpawner spawner;
+    public GameObject dialogueCanvas;
+    public NPCManager manager;
 
     private bool movingToCounter = true;
     private bool interacted = false;
@@ -26,7 +26,6 @@ public class NPCController : MonoBehaviour
 
     void Start()
     {
-        // 🔹 Make sure the dialogue box starts hidden
         if (dialogueCanvas != null)
             dialogueCanvas.SetActive(false);
     }
@@ -39,7 +38,6 @@ public class NPCController : MonoBehaviour
             {
                 MoveTo(counterPoint.position);
 
-                // When NPC reaches the counter
                 if (Vector2.Distance(transform.position, counterPoint.position) < 0.05f)
                 {
                     StartCoroutine(Interact());
@@ -49,11 +47,11 @@ public class NPCController : MonoBehaviour
             {
                 MoveTo(exitPoint.position);
 
-                // When NPC reaches exit
                 if (Vector2.Distance(transform.position, exitPoint.position) < 0.05f)
                 {
-                    if (spawner != null)
-                        spawner.SpawnNextNPC();
+                    // When NPC reaches exit, spawn next one and remove self
+                    if (manager != null)
+                        manager.SpawnNextNPC();
 
                     Destroy(gameObject);
                 }
@@ -71,28 +69,18 @@ public class NPCController : MonoBehaviour
         isInteracting = true;
         movingToCounter = false;
 
-        // 🎬 Pick random dialogue
         string selectedDialogue = dialogues[Random.Range(0, dialogues.Length)];
 
-        // 🗨️ Show dialogue box
         if (dialogueCanvas != null)
-        {
             dialogueCanvas.SetActive(true);
-        }
 
         if (dialogueText != null)
-        {
             dialogueText.text = selectedDialogue;
-        }
 
-        // ⏳ Wait 3 seconds
         yield return new WaitForSeconds(3f);
 
-        // 💬 Hide dialogue box
         if (dialogueCanvas != null)
-        {
             dialogueCanvas.SetActive(false);
-        }
 
         interacted = true;
         isInteracting = false;

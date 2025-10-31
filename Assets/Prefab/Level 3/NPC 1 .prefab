@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3511423821943079365}
   - component: {fileID: 4103681448774597695}
   m_Layer: 0
-  m_Name: NPC 1 1
+  m_Name: 'NPC 1 '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -205,4 +205,5 @@ MonoBehaviour:
   exitPoint: {fileID: 0}
   moveSpeed: 2
   dialogueText: {fileID: 0}
+  dialogueCanvas: {fileID: 0}
   spawner: {fileID: 0}
