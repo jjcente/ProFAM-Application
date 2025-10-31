@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 8047969284255949022}
   - component: {fileID: 4301839384844367036}
   - component: {fileID: 3511423821943079365}
-  - component: {fileID: 4103681448774597695}
   m_Layer: 0
   m_Name: 'NPC 1 '
   m_TagString: Untagged
@@ -189,21 +188,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &4103681448774597695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4114630398582723073}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7200b37961595d41bb0790882a04e65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCController
-  counterPoint: {fileID: 0}
-  exitPoint: {fileID: 0}
-  moveSpeed: 2
-  dialogueText: {fileID: 0}
-  dialogueCanvas: {fileID: 0}
-  spawner: {fileID: 0}

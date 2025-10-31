@@ -242,9 +242,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCController
   counterPoint: {fileID: 836054610}
   exitPoint: {fileID: 1180548372}
+  topScreenPosition: {fileID: 0}
   moveSpeed: 2
   dialogueText: {fileID: 1668088398}
   dialogueCanvas: {fileID: 1737631061}
+  answerInput: {fileID: 0}
+  answerPanel: {fileID: 0}
   manager: {fileID: 1319912902}
 --- !u!1001 &319163096
 PrefabInstance:
@@ -274,6 +277,10 @@ PrefabInstance:
       propertyPath: dialogueCanvas
       value: 
       objectReference: {fileID: 1737631061}
+    - target: {fileID: 4103681448774597695, guid: c6b43516c34d2eb41a903b73ad8facae, type: 3}
+      propertyPath: topScreenPosition
+      value: 
+      objectReference: {fileID: 1067119488}
     - target: {fileID: 4114630398582723073, guid: c6b43516c34d2eb41a903b73ad8facae, type: 3}
       propertyPath: m_Name
       value: 'NPC 1 '
@@ -335,6 +342,7 @@ GameObject:
   - component: {fileID: 427711321}
   - component: {fileID: 427711320}
   - component: {fileID: 427711319}
+  - component: {fileID: 427711323}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -425,6 +433,18 @@ RectTransform:
   m_AnchoredPosition: {x: 262.5, y: 147.625}
   m_SizeDelta: {x: 1920.2032, y: 1079.8857}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &427711323
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 427711318}
+  m_Enabled: 1
+  m_Alpha: 0.5
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &522749690
 GameObject:
   m_ObjectHideFlags: 0
@@ -644,9 +664,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCController
   counterPoint: {fileID: 836054610}
   exitPoint: {fileID: 1180548372}
+  topScreenPosition: {fileID: 0}
   moveSpeed: 2
   dialogueText: {fileID: 1668088398}
   dialogueCanvas: {fileID: 1737631061}
+  answerInput: {fileID: 0}
+  answerPanel: {fileID: 0}
   manager: {fileID: 1319912902}
 --- !u!1 &918365827 stripped
 GameObject:
@@ -667,9 +690,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCController
   counterPoint: {fileID: 836054610}
   exitPoint: {fileID: 1180548372}
+  topScreenPosition: {fileID: 0}
   moveSpeed: 2
   dialogueText: {fileID: 1668088398}
   dialogueCanvas: {fileID: 1737631061}
+  answerInput: {fileID: 0}
+  answerPanel: {fileID: 0}
   manager: {fileID: 1319912902}
 --- !u!95 &918365831
 Animator:
@@ -869,6 +895,37 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.0047, y: 0.0506, z: 0}
   m_LocalScale: {x: 0.4646683, y: 0.39345166, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1067119487
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1067119488}
+  m_Layer: 0
+  m_Name: TopScreenPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1067119488
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1067119487}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 2.61, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1143,9 +1200,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCController
   counterPoint: {fileID: 836054610}
   exitPoint: {fileID: 1180548372}
+  topScreenPosition: {fileID: 0}
   moveSpeed: 2
   dialogueText: {fileID: 1668088398}
   dialogueCanvas: {fileID: 1737631061}
+  answerInput: {fileID: 0}
+  answerPanel: {fileID: 0}
   manager: {fileID: 1319912902}
 --- !u!1 &1375775586
 GameObject:
@@ -1303,9 +1363,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCController
   counterPoint: {fileID: 836054610}
   exitPoint: {fileID: 1180548372}
+  topScreenPosition: {fileID: 0}
   moveSpeed: 2
   dialogueText: {fileID: 1668088398}
   dialogueCanvas: {fileID: 1737631061}
+  answerInput: {fileID: 0}
+  answerPanel: {fileID: 0}
   manager: {fileID: 1319912902}
 --- !u!95 &1506288299
 Animator:
@@ -1356,6 +1419,7 @@ GameObject:
   - component: {fileID: 1668088397}
   - component: {fileID: 1668088399}
   - component: {fileID: 1668088398}
+  - component: {fileID: 1668088400}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -1481,6 +1545,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1668088396}
   m_CullTransparentMesh: 1
+--- !u!225 &1668088400
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668088396}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1737631061
 GameObject:
   m_ObjectHideFlags: 0
@@ -1492,6 +1568,8 @@ GameObject:
   - component: {fileID: 1737631063}
   - component: {fileID: 1737631062}
   - component: {fileID: 1737631064}
+  - component: {fileID: 1737631065}
+  - component: {fileID: 1737631066}
   m_Layer: 0
   m_Name: DialogueBox
   m_TagString: Untagged
@@ -1547,7 +1625,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 100
   m_Sprite: {fileID: 1191263844537089097, guid: 705f1b6e2e7b52b4f94bd8e3afb5c893, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.8941177, b: 0.7686275, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1585,6 +1663,40 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1737631061}
   m_CullTransparentMesh: 1
+--- !u!95 &1737631065
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1737631061}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7aecd96aa1cf3c94896f928a46590fa7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!225 &1737631066
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1737631061}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &1779341210
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1732,9 +1844,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCController
   counterPoint: {fileID: 836054610}
   exitPoint: {fileID: 1180548372}
+  topScreenPosition: {fileID: 0}
   moveSpeed: 2
   dialogueText: {fileID: 1668088398}
   dialogueCanvas: {fileID: 1737631061}
+  answerInput: {fileID: 0}
+  answerPanel: {fileID: 0}
   manager: {fileID: 1319912902}
 --- !u!1 &1918820079 stripped
 GameObject:
@@ -2094,3 +2209,4 @@ SceneRoots:
   - {fileID: 282427033}
   - {fileID: 805627491}
   - {fileID: 427711322}
+  - {fileID: 1067119488}
