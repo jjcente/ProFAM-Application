@@ -8,11 +8,19 @@ public class QuestionManager : MonoBehaviour
 {
     public static QuestionManager Instance { get; private set; }
 
-    public GameObject panel;        // assign QuestionPanel (UI)
-    public TMP_Text  questionText;       // UI Text
-    public Button[] answerButtons;  // 4 buttons
-    public TMP_Text[] answerTexts;      // labels on those buttons
+    [Header("UI References")]
+    public GameObject panel;          // Question panel
+    public TMP_Text questionText;     // Question text
+    public Button[] answerButtons;    // Answer buttons
+    public TMP_Text[] answerTexts;    // Text on buttons
+    public TMP_Text solutionText;     // Solution text
+
+    [Header("Settings")]
     public float showCorrectTime = 2f;
+
+    [Header("SFX")]
+    public AudioClip correctClip;
+    public AudioClip wrongClip;
 
     private Bomb currentBomb;
     private Action<bool> answerCallback;
@@ -21,57 +29,79 @@ public class QuestionManager : MonoBehaviour
     {
         Instance = this;
         panel.SetActive(false);
+        solutionText.gameObject.SetActive(false);
     }
 
-  public void AskQuestion(Bomb bomb, string question, string[] answers, int correctIndex, Action<bool> callback = null)
-{
-    currentBomb = bomb;
-    answerCallback = callback;
-    panel.SetActive(true);
-    questionText.text = question;
-
-    for (int i = 0; i < answerButtons.Length; i++)
+    public void AskQuestion(Bomb bomb, Question question, Action<bool> callback = null)
     {
-        int idx = i;
-        answerButtons[i].onClick.RemoveAllListeners();
-        answerButtons[i].onClick.AddListener(() => OnAnswerClicked(idx, correctIndex));
-        answerTexts[i].text = answers.Length > i ? answers[i] : "";
+        currentBomb = bomb;
+        answerCallback = callback;
+        panel.SetActive(true);
 
-        // Re-enable buttons in case they were disabled before
-        answerButtons[i].interactable = true;
+        // Show only the question initially
+        questionText.text = question.question;
+        solutionText.gameObject.SetActive(false);
+        solutionText.text = "";
+
+        // Setup answer buttons
+        for (int i = 0; i < answerButtons.Length; i++)
+        {
+            int idx = i;
+            answerButtons[i].onClick.RemoveAllListeners();
+            answerButtons[i].onClick.AddListener(() => OnAnswerClicked(idx, question));
+            answerTexts[i].text = question.answers.Length > i ? question.answers[i] : "";
+            answerButtons[i].interactable = true;
+        }
     }
-}
-  void OnAnswerClicked(int chosen, int correct)
+
+    private void OnAnswerClicked(int chosen, Question question)
     {
-        bool ok = chosen == correct;
+        bool ok = chosen == question.correctIndex;
+
+        // Show solution after player chooses
+        solutionText.text = "Solution: " + question.solution;
+        solutionText.gameObject.SetActive(true);
+
+        // Disable all buttons
+        foreach (var btn in answerButtons) btn.interactable = false;
 
         if (ok)
         {
-            panel.SetActive(false);
+            AudioManager.Instance.PlaySFX(correctClip);
             currentBomb?.Defuse();
+            StartCoroutine(HidePanelAfterDelay());
             answerCallback?.Invoke(true);
         }
         else
         {
-            StartCoroutine(HandleIncorrectAnswer(correct));
+            AudioManager.Instance.PlaySFX(wrongClip);
+            StartCoroutine(HandleIncorrectAnswer(question));
         }
     }
-    
-        private IEnumerator HandleIncorrectAnswer(int correctIndex)
+
+    private IEnumerator HandleIncorrectAnswer(Question question)
     {
+        int correctIndex = question.correctIndex;
+
+        // Highlight the correct answer button
         Color originalColor = answerButtons[correctIndex].image.color;
         answerButtons[correctIndex].image.color = Color.green;
 
-        foreach (var btn in answerButtons) btn.interactable = false;
-
         yield return new WaitForSeconds(showCorrectTime);
 
+        // Reset highlight
         answerButtons[correctIndex].image.color = originalColor;
 
+        // Explode the bomb
         currentBomb?.Explode();
         panel.SetActive(false);
 
         answerCallback?.Invoke(false);
     }
 
+    private IEnumerator HidePanelAfterDelay()
+    {
+        yield return new WaitForSeconds(showCorrectTime);
+        panel.SetActive(false);
+    }
 }

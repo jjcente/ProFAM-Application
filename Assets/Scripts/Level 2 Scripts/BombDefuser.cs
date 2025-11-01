@@ -6,6 +6,8 @@ public class BombDefuser : MonoBehaviour
     public LayerMask bombLayer;
     private Bomb nearestBomb;
 
+    public AudioClip defuseSfx;
+
     void Update()
     {
         FindNearestBomb();
@@ -41,23 +43,23 @@ public class BombDefuser : MonoBehaviour
         if (nearestBomb != null)
         {
             Debug.Log("UI Interact button pressed — starting question!");
+            AudioManager.Instance.PlaySFX(defuseSfx);
             StartQuestionFor(nearestBomb);
         }
     }
 
-   void StartQuestionFor(Bomb b)
-{
+
+    void StartQuestionFor(Bomb b)
+    {
+       if (QuestionDatabase.Instance.AllQuestionsUsed())
+        QuestionDatabase.Instance.ResetQuestions(); // Reset so questions can repeat
+
     Question q = QuestionDatabase.Instance.GetRandomQuestion();
     if (q != null)
-    {
-        QuestionManager.Instance.AskQuestion(b, q.question, q.answers, q.correctIndex);
-        Debug.Log("Starting question for bomb: " + b.name);
-    }
+        QuestionManager.Instance.AskQuestion(b, q);
     else
-    {
-        Debug.LogWarning("No questions available!");
+        Debug.LogWarning("No questions available even after reset!");
     }
-}
 
     private void OnDrawGizmosSelected()
     {

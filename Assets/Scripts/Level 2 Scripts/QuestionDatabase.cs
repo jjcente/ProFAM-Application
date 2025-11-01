@@ -62,4 +62,9 @@ public class QuestionDatabase : MonoBehaviour
     {
         usedQuestionIndexes.Clear();
     }
+
+    public bool AllQuestionsUsed()
+{
+    return usedQuestionIndexes.Count >= questions.Length;
+}
 }
