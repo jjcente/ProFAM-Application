@@ -175,6 +175,8 @@ MonoBehaviour:
   wallLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  explodeClip: {fileID: 8300000, guid: 19c83741d9324776693984889211327c, type: 3}
+  defuseClip: {fileID: 8300000, guid: 2c360ccbb5cab6a0392cbdef8fa47f6e, type: 3}
 --- !u!114 &3822711564713643278
 MonoBehaviour:
   m_ObjectHideFlags: 0

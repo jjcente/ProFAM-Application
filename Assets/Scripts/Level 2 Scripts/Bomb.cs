@@ -8,6 +8,8 @@ public class Bomb : MonoBehaviour
 
     public bool isDefused { get; private set; } = false;
     public LayerMask wallLayerMask;
+    public AudioClip explodeClip;
+    public AudioClip defuseClip;
 
 
     SpriteRenderer sr;
@@ -20,7 +22,8 @@ public class Bomb : MonoBehaviour
     }
 
 public void Defuse()
-{
+    {
+    AudioManager.Instance.PlaySFX(defuseClip);
     if (isDefused) return;
     isDefused = true;
 
@@ -71,6 +74,7 @@ public void Explode()
 
                 e.SetDirection(dir);
                 e.Play();
+                AudioManager.Instance.PlaySFX(explodeClip);
             }
         }
     }
