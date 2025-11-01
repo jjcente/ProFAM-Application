@@ -542,8 +542,8 @@ MonoBehaviour:
   - {fileID: 1971539326}
   - {fileID: 120044129}
   manager: {fileID: 1319912902}
-  correctAnswerAudio: {fileID: 0}
-  wrongAnswerAudio: {fileID: 0}
+  correctAnswerAudio: {fileID: 311016453}
+  wrongAnswerAudio: {fileID: 1838102894}
 --- !u!1 &311016451
 GameObject:
   m_ObjectHideFlags: 0
@@ -1343,8 +1343,8 @@ MonoBehaviour:
   - {fileID: 1971539326}
   - {fileID: 120044129}
   manager: {fileID: 1319912902}
-  correctAnswerAudio: {fileID: 0}
-  wrongAnswerAudio: {fileID: 0}
+  correctAnswerAudio: {fileID: 311016453}
+  wrongAnswerAudio: {fileID: 1838102894}
 --- !u!1 &918365827 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2816962895638456836, guid: 765517da2a93bf94b8cdb12f4eb12e59, type: 3}
@@ -1376,8 +1376,8 @@ MonoBehaviour:
   - {fileID: 1971539326}
   - {fileID: 120044129}
   manager: {fileID: 1319912902}
-  correctAnswerAudio: {fileID: 0}
-  wrongAnswerAudio: {fileID: 0}
+  correctAnswerAudio: {fileID: 311016453}
+  wrongAnswerAudio: {fileID: 1838102894}
 --- !u!95 &918365831
 Animator:
   serializedVersion: 7
@@ -2015,8 +2015,8 @@ MonoBehaviour:
   - {fileID: 1971539326}
   - {fileID: 120044129}
   manager: {fileID: 1319912902}
-  correctAnswerAudio: {fileID: 0}
-  wrongAnswerAudio: {fileID: 0}
+  correctAnswerAudio: {fileID: 311016453}
+  wrongAnswerAudio: {fileID: 1838102894}
 --- !u!1 &1375775586
 GameObject:
   m_ObjectHideFlags: 0
@@ -2185,8 +2185,8 @@ MonoBehaviour:
   - {fileID: 1971539326}
   - {fileID: 120044129}
   manager: {fileID: 1319912902}
-  correctAnswerAudio: {fileID: 0}
-  wrongAnswerAudio: {fileID: 0}
+  correctAnswerAudio: {fileID: 311016453}
+  wrongAnswerAudio: {fileID: 1838102894}
 --- !u!95 &1506288299
 Animator:
   serializedVersion: 7
@@ -2970,8 +2970,8 @@ MonoBehaviour:
   - {fileID: 1971539326}
   - {fileID: 120044129}
   manager: {fileID: 1319912902}
-  correctAnswerAudio: {fileID: 0}
-  wrongAnswerAudio: {fileID: 0}
+  correctAnswerAudio: {fileID: 311016453}
+  wrongAnswerAudio: {fileID: 1838102894}
 --- !u!1 &1838102893
 GameObject:
   m_ObjectHideFlags: 0
@@ -3094,12 +3094,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1838102893}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 20.16037, y: 1.36889, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1868622251}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1868622250
 GameObject:
@@ -3130,6 +3130,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1838102895}
   - {fileID: 311016452}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3165,7 +3166,7 @@ MonoBehaviour:
   - {fileID: 120044129}
   manager: {fileID: 1319912902}
   correctAnswerAudio: {fileID: 311016453}
-  wrongAnswerAudio: {fileID: 0}
+  wrongAnswerAudio: {fileID: 1838102894}
 --- !u!1001 &1962234139
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3623,9 +3624,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1737631061}
     - target: {fileID: 1096235544577970567, guid: 732b534ffb29a2841b28617794c4dce4, type: 3}
+      propertyPath: wrongAnswerAudio
+      value: 
+      objectReference: {fileID: 1838102894}
+    - target: {fileID: 1096235544577970567, guid: 732b534ffb29a2841b28617794c4dce4, type: 3}
       propertyPath: topScreenPosition
       value: 
       objectReference: {fileID: 1067119488}
+    - target: {fileID: 1096235544577970567, guid: 732b534ffb29a2841b28617794c4dce4, type: 3}
+      propertyPath: correctAnswerAudio
+      value: 
+      objectReference: {fileID: 311016453}
     - target: {fileID: 1096235544577970567, guid: 732b534ffb29a2841b28617794c4dce4, type: 3}
       propertyPath: defaultDialoguePosition
       value: 
@@ -3792,9 +3801,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1737631061}
     - target: {fileID: 6879239780129891483, guid: 81278d05b3a5ec84491770c41b9371e0, type: 3}
+      propertyPath: wrongAnswerAudio
+      value: 
+      objectReference: {fileID: 1838102894}
+    - target: {fileID: 6879239780129891483, guid: 81278d05b3a5ec84491770c41b9371e0, type: 3}
       propertyPath: topScreenPosition
       value: 
       objectReference: {fileID: 1067119488}
+    - target: {fileID: 6879239780129891483, guid: 81278d05b3a5ec84491770c41b9371e0, type: 3}
+      propertyPath: correctAnswerAudio
+      value: 
+      objectReference: {fileID: 311016453}
     - target: {fileID: 6879239780129891483, guid: 81278d05b3a5ec84491770c41b9371e0, type: 3}
       propertyPath: defaultDialoguePosition
       value: 
@@ -3852,4 +3869,3 @@ SceneRoots:
   - {fileID: 153056166}
   - {fileID: 1791951072}
   - {fileID: 1868622251}
-  - {fileID: 1838102895}
