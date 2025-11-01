@@ -4503,7 +4503,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e6399662bdaa26258771a1cff34a179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
-  sfxSource: {fileID: 0}
+  sfxSource: {fileID: 735963311}
 --- !u!4 &735963313
 Transform:
   m_ObjectHideFlags: 0
@@ -6685,7 +6685,7 @@ MonoBehaviour:
   tilemapHelper: {fileID: 1792808942}
   spawnAreaMin: {x: 0, y: 0}
   spawnAreaMax: {x: 0, y: 0}
-  sharedTime: 300
+  sharedTime: 10
   sharedTimerText: {fileID: 574670150}
 --- !u!114 &1837142882
 MonoBehaviour:
