@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 71717911483f9f241870db3c037b2a1b
+guid: 2b728b333a408184cab618c42a7d36cc
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5714451346485903439
-    second: Fattern Love_0
+      213: -4944688246994402244
+    second: fattern_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Fattern Love_0
+      name: fattern_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 3000
-        height: 2000
+        width: 800
+        height: 464
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1bf747ed6c032b0b0800000000000000
-      internalID: -5714451346485903439
+      spriteID: c3489d8cc30f06bb0800000000000000
+      internalID: -4944688246994402244
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Fattern Love_0: -5714451346485903439
+      fattern_0: -4944688246994402244
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
