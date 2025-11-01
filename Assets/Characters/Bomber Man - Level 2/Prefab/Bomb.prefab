@@ -170,8 +170,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bomb
   localFuse: 999
-  explosionSprite: {fileID: 0}
-  defusedVFX: {fileID: 0}
+  explosionPrefab: {fileID: 1522236602148387342, guid: be198d608d812e5218eb76f1a5b02a0a, type: 3}
+  defusedSprite: {fileID: 4367764165856708723, guid: 91918dd9144412a6dae825a024c14564, type: 3}
+  wallLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &3822711564713643278
 MonoBehaviour:
   m_ObjectHideFlags: 0

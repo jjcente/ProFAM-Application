@@ -45,16 +45,19 @@ public class BombDefuser : MonoBehaviour
         }
     }
 
-    void StartQuestionFor(Bomb b)
+   void StartQuestionFor(Bomb b)
+{
+    Question q = QuestionDatabase.Instance.GetRandomQuestion();
+    if (q != null)
     {
-        // Example hardcoded question — replace with your question source
-        string q = "What is 9 + 13?";
-        string[] answers = new string[] { "22", "21", "20", "23" };
-        int correct = 0;
-
+        QuestionManager.Instance.AskQuestion(b, q.question, q.answers, q.correctIndex);
         Debug.Log("Starting question for bomb: " + b.name);
-        QuestionManager.Instance.AskQuestion(b, q, answers, correct);
     }
+    else
+    {
+        Debug.LogWarning("No questions available!");
+    }
+}
 
     private void OnDrawGizmosSelected()
     {
