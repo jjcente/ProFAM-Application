@@ -66,5 +66,6 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj",
     },
-    "dotnet.defaultSolution": "ProFAM-Application.sln"
+    "dotnet.defaultSolution": "ProFAM-Application.sln",
+    "git.ignoreLimitWarning": true
 }
