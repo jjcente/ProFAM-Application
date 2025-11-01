@@ -49,9 +49,14 @@ public class BombManager : MonoBehaviour
     }
 
     void UpdateTimerUI()
-    {
-        if (sharedTimerText) sharedTimerText.text = Mathf.CeilToInt(timer).ToString();
-    }
+{
+    if (!sharedTimerText) return;
+
+    int minutes = Mathf.FloorToInt(timer / 60f);
+    int seconds = Mathf.FloorToInt(timer % 60f);
+
+    sharedTimerText.text = string.Format("{0}:{1:00}", minutes, seconds);
+}
 
     void SpawnBombs()
     {
