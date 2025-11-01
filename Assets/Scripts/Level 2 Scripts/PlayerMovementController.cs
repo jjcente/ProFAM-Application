@@ -21,6 +21,10 @@ public class PlayerMovementController : MonoBehaviour
     private Vector2 uiDirection = Vector2.zero;
     public Transform spawnPoint;
 
+    public AudioClip deathClip;
+    public AudioClip respawnClip;
+
+
 
     private void Awake()
     {
@@ -91,7 +95,8 @@ public class PlayerMovementController : MonoBehaviour
     }
 private void DeathSequence()
 {
-    Debug.Log("DeathSequence triggered");
+     Debug.Log("DeathSequence triggered");
+     AudioManager.Instance.PlaySFX(deathClip);
 
     enabled = false; // stop movement input
     var col = GetComponent<Collider2D>();
@@ -141,6 +146,7 @@ private void DeathSequence()
     public void Respawn()
 {
     Debug.Log("Respawning player...");
+    AudioManager.Instance.PlaySFX(respawnClip);
 
     // Reactivate movement
     enabled = true;
