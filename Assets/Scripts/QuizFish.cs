@@ -2,16 +2,21 @@ using UnityEngine;
 
 public class QuizFish : MonoBehaviour
 {
+    [Header("Movement Settings")]
     public float speed = 2f;
-    public QuizManager quizManager;
-    private bool hasTriggered = false;
+    private Vector2 moveDirection;
+    private float directionChangeInterval = 2f;
+    private float directionTimer;
+
     private Camera mainCam;
     private Vector2 screenMin;
     private Vector2 screenMax;
 
-    private Vector2 moveDirection; // new: stores random movement direction
-    private float directionChangeInterval = 2f; // time before changing direction
-    private float directionTimer;
+    [Header("Quiz Settings")]
+    public int quizNumber = 1; // assign in Inspector
+    public QuizManager quizManager;
+
+    private bool hasTriggered = false;
 
     void Start()
     {
@@ -21,7 +26,9 @@ public class QuizFish : MonoBehaviour
         if (quizManager == null)
             quizManager = FindFirstObjectByType<QuizManager>();
 
-        // initialize with a random direction
+        if (quizManager == null)
+            Debug.LogWarning("No QuizManager found in scene!");
+
         ChangeDirection();
     }
 
@@ -34,7 +41,7 @@ public class QuizFish : MonoBehaviour
     {
         transform.Translate(moveDirection * speed * Time.deltaTime, Space.World);
 
-        // Flip based on x direction
+        // Flip sprite based on direction
         if (moveDirection.x > 0 && transform.localScale.x < 0)
             Flip();
         else if (moveDirection.x < 0 && transform.localScale.x > 0)
@@ -79,20 +86,11 @@ public class QuizFish : MonoBehaviour
         directionTimer = directionChangeInterval;
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    void Flip()
     {
-        if (!hasTriggered && other.CompareTag("Player"))
-        {
-            hasTriggered = true;
-            Debug.Log("QuizFish collided with Player — triggering quiz!");
-
-            Time.timeScale = 0f;
-
-            if (quizManager != null)
-                quizManager.ShowQuiz(gameObject);
-            else
-                Debug.LogWarning("QuizManager not assigned in QuizFish!");
-        }
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
     }
 
     void UpdateScreenBounds()
@@ -103,11 +101,18 @@ public class QuizFish : MonoBehaviour
         screenMax = new Vector2(topRight.x, topRight.y);
     }
 
-    void Flip()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
+        if (!hasTriggered && other.CompareTag("Player"))
+        {
+            hasTriggered = true;
+            Debug.Log($"QuizFish #{quizNumber} collided with Player — triggering quiz!");
+
+            if (quizManager != null)
+                quizManager.TriggerQuiz(gameObject, quizNumber);
+            else
+                Debug.LogWarning("QuizManager not assigned in QuizFish!");
+        }
     }
 }
 

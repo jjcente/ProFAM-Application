@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Fish
   - QuizFish
+  - QuizFish2
   layers:
   - Default
   - TransparentFX
