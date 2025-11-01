@@ -10,7 +10,7 @@ public class UserFish : MonoBehaviour
 
     private Vector2 moveDirection = Vector2.zero;
     private Camera mainCam;
-    private bool facingRight = true; // ✅ Track direction for flipping
+    private bool facingRight = true; 
 
     private void Start()
     {
@@ -58,6 +58,10 @@ public class UserFish : MonoBehaviour
     {
         Time.timeScale = 0f;
 
+        float maxTriggerDistance = 2f; // adjust as needed
+        if (Vector2.Distance(transform.position, other.transform.position) > maxTriggerDistance)
+        return;
+
         QuizFish quizFish = other.GetComponent<QuizFish>();
         if (quizFish != null)
         {
@@ -65,6 +69,8 @@ public class UserFish : MonoBehaviour
 
             if (quizManager != null)
                 quizManager.TriggerQuiz(other.gameObject, quizFish.quizNumber);
+            else 
+                Time.timeScale = 1f;
         }
     }
 
@@ -100,6 +106,17 @@ public class UserFish : MonoBehaviour
         moveDirection = Vector2.zero; 
         Debug.Log("StopMove() pressed"); 
     }
+
+    public void Grow(float amount)
+    {
+        transform.localScale += new Vector3(amount, amount, amount);
+    }
+
+    public void Shrink(float amount)
+    {
+        transform.localScale -= new Vector3(amount, amount, amount);
+    }
+
 
     // ✅ EventSystem reset (if quiz re-enables input later)
     public void ForceUpdateAfterQuiz()

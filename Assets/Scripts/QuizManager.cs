@@ -35,10 +35,10 @@ public class QuizManager : MonoBehaviour
     public List<Button> choiceButtons;
     public TextMeshProUGUI feedbackText;
 
-    private GameObject targetFish;
+    private GameObject targetFish;    
+    public UserFish playerFish;     
     private string correctAnswer = "";
 
-    // Sub-question system
     private int currentSubQuestion = 0;
     private List<(string question, string correct, string[] options)> subQuestions;
 
@@ -69,7 +69,7 @@ public class QuizManager : MonoBehaviour
 
     private void LoadQuizzesFromJSON()
     {
-        TextAsset quizJSON = Resources.Load<TextAsset>("quizzes"); // put quizzes.json in Resources folder
+        TextAsset quizJSON = Resources.Load<TextAsset>("quizzes"); // quizzes.json in Resources folder
         if (quizJSON != null)
         {
             allQuizzes = JsonUtility.FromJson<QuizCollection>(quizJSON.text);
@@ -80,30 +80,17 @@ public class QuizManager : MonoBehaviour
         }
     }
 
-    public void ShowQuiz(GameObject fishToRemove)
+    // Call this from QuizFish on collision
+    public void SetPlayerFish(UserFish player)
     {
-        ShowQuizFromJSON(fishToRemove, 1);
+        playerFish = player;
     }
 
-    public void ShowQuiz2(GameObject fishToRemove)
-    {
-        ShowQuizFromJSON(fishToRemove, 2);
-    }
-
-    public void ShowQuiz3(GameObject fishToRemove)
-    {
-        ShowQuizFromJSON(fishToRemove, 3);
-    }
-
-    public void ShowQuiz4(GameObject fishToRemove)
-    {
-        ShowQuizFromJSON(fishToRemove, 4);
-    }
-
-    public void ShowQuiz5(GameObject fishToRemove)
-    {
-        ShowQuizFromJSON(fishToRemove, 5);
-    }
+    public void ShowQuiz(GameObject fishToRemove) => ShowQuizFromJSON(fishToRemove, 1);
+    public void ShowQuiz2(GameObject fishToRemove) => ShowQuizFromJSON(fishToRemove, 2);
+    public void ShowQuiz3(GameObject fishToRemove) => ShowQuizFromJSON(fishToRemove, 3);
+    public void ShowQuiz4(GameObject fishToRemove) => ShowQuizFromJSON(fishToRemove, 4);
+    public void ShowQuiz5(GameObject fishToRemove) => ShowQuizFromJSON(fishToRemove, 5);
 
     private void ShowQuizFromJSON(GameObject fishToRemove, int quizNumber)
     {
@@ -133,7 +120,7 @@ public class QuizManager : MonoBehaviour
                 subQuestions.Add((sq.question, sq.correct, sq.options));
             }
 
-            SetupQuiz(fishToRemove, selectedQuiz.problem);
+            SetupQuiz(selectedQuiz.problem);
         }
         else
         {
@@ -141,7 +128,7 @@ public class QuizManager : MonoBehaviour
         }
     }
 
-    private void SetupQuiz(GameObject fishToRemove, string problem)
+    private void SetupQuiz(string problem)
     {
         if (quizPanel == null) return;
 
@@ -153,9 +140,7 @@ public class QuizManager : MonoBehaviour
             cg.blocksRaycasts = true;
         }
 
-        targetFish = fishToRemove;
         currentSubQuestion = 0;
-
         DisplaySubQuestion(problem);
     }
 
@@ -187,50 +172,42 @@ public class QuizManager : MonoBehaviour
             feedbackText.text = "";
     }
 
-private void OnChoiceSelected(Button selectedButton)
-{
-    string selectedAnswer = selectedButton.GetComponentInChildren<TextMeshProUGUI>().text.Trim().ToLower();
-    string selectedLetter = selectedAnswer.Substring(0, 1);
-
-    UserFish user = targetFish.GetComponent<UserFish>();
-    if (selectedLetter == correctAnswer)
+    private void OnChoiceSelected(Button selectedButton)
     {
-        feedbackText.text = "Correct!";
-        feedbackText.color = Color.green;
+        string selectedAnswer = selectedButton.GetComponentInChildren<TextMeshProUGUI>().text.Trim().ToLower();
+        string selectedLetter = selectedAnswer.Substring(0, 1);
 
-        if (user != null)
+        if (selectedLetter == correctAnswer)
         {
-            float growthAmount = 0.1f;
-            user.transform.localScale += new Vector3(growthAmount, growthAmount, growthAmount);
-        }
+            feedbackText.text = "Correct!";
+            feedbackText.color = Color.green;
 
-        currentSubQuestion++;
-        if (currentSubQuestion < subQuestions.Count)
-            StartCoroutine(NextSubQuestionAfterDelay(1.2f));
+            if (playerFish != null)
+            {
+                float growthAmount = 0.2f;
+                playerFish.transform.localScale += new Vector3(growthAmount, growthAmount, 0f);
+            }
+
+            currentSubQuestion++;
+            if (currentSubQuestion < subQuestions.Count)
+                StartCoroutine(NextSubQuestionAfterDelay(1.2f));
+            else
+                StartCoroutine(CloseQuizAfterDelay(1.2f));
+        }
         else
-            StartCoroutine(CloseQuizAfterDelay(1.2f));
-    }
-    else
-    {
-        feedbackText.text = "Incorrect! Quiz closed.";
-        feedbackText.color = Color.red;
-
-        if (user != null)
         {
-            float shrinkAmount = 0.05f;
-            user.transform.localScale -= new Vector3(shrinkAmount, shrinkAmount, shrinkAmount);
+            feedbackText.text = "Incorrect! Quiz closed.";
+            feedbackText.color = Color.red;
+
+            if (playerFish != null)
+            {
+                float shrinkAmount = 0.2f;
+                playerFish.transform.localScale -= new Vector3(shrinkAmount, shrinkAmount, 0f);
+            }
+
+            StartCoroutine(CloseQuizAfterDelayWrongAnswer(0.8f));
         }
-
-        // Delay before closing the quiz
-        StartCoroutine(CloseQuizAfterDelayWrongAnswer(0.8f));
     }
-}
-
-private IEnumerator CloseQuizAfterDelayWrongAnswer(float delay)
-{
-    yield return new WaitForSecondsRealtime(delay);
-    HideQuiz(); // closes the quiz but does NOT destroy the quiz fish
-}
 
     private IEnumerator NextSubQuestionAfterDelay(float delay)
     {
@@ -242,9 +219,15 @@ private IEnumerator CloseQuizAfterDelayWrongAnswer(float delay)
     {
         yield return new WaitForSecondsRealtime(delay);
         if (targetFish != null)
-            Destroy(targetFish);
+            Destroy(targetFish); // destroy quiz fish only on correct answer
 
         HideQuiz();
+    }
+
+    private IEnumerator CloseQuizAfterDelayWrongAnswer(float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+        HideQuiz(); // closes quiz but does NOT destroy quiz fish
     }
 
     public void HideQuiz()
@@ -261,8 +244,7 @@ private IEnumerator CloseQuizAfterDelayWrongAnswer(float delay)
             quizPanel.SetActive(false);
         }
 
-        if (Time.timeScale == 0)
-            Time.timeScale = 1f;
+        Time.timeScale = 1f;
 
         targetFish = null;
         StartCoroutine(ResetEventSystemNextFrame());
@@ -277,17 +259,7 @@ private IEnumerator CloseQuizAfterDelayWrongAnswer(float delay)
 
     public void TriggerQuiz(GameObject fish, int quizNumber)
     {
-        switch (quizNumber)
-        {
-            case 1: ShowQuiz(fish); break;
-            case 2: ShowQuiz2(fish); break;
-            case 3: ShowQuiz3(fish); break;
-            case 4: ShowQuiz4(fish); break;
-            case 5: ShowQuiz5(fish); break;
-            default:
-                Debug.LogWarning("⚠️ No quiz assigned for this number!");
-                break;
-        }
+        ShowQuizFromJSON(fish, quizNumber);
     }
 }
 

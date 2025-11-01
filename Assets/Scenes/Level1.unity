@@ -261,7 +261,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 30}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &96914070
 MonoBehaviour:
@@ -474,7 +474,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.2
+  m_Radius: 0.1
 --- !u!114 &129208962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -510,6 +510,7 @@ MonoBehaviour:
   - {fileID: 1112689550}
   - {fileID: 1951077522}
   feedbackText: {fileID: 1184791889}
+  playerFish: {fileID: 1939046372}
 --- !u!50 &129208964
 Rigidbody2D:
   serializedVersion: 5
@@ -695,6 +696,7 @@ MonoBehaviour:
   - {fileID: 1112689550}
   - {fileID: 1951077522}
   feedbackText: {fileID: 1184791889}
+  playerFish: {fileID: 1939046372}
 --- !u!58 &169224995
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -730,7 +732,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.2
+  m_Radius: 0.1
 --- !u!114 &169224996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3127,7 +3129,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1000, y: 50}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &930307375
 MonoBehaviour:
@@ -3476,6 +3478,7 @@ MonoBehaviour:
   - {fileID: 1112689550}
   - {fileID: 1951077522}
   feedbackText: {fileID: 1184791889}
+  playerFish: {fileID: 1939046372}
 --- !u!58 &1070709179
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3511,7 +3514,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.2
+  m_Radius: 0.1
 --- !u!114 &1070709180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3637,7 +3640,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 30}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1112689548
 MonoBehaviour:
@@ -3778,7 +3781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 0.9411765, a: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.6313726}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3824,8 +3827,8 @@ MonoBehaviour:
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
@@ -3963,7 +3966,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1230613518
 GameObject:
@@ -5741,7 +5744,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 30}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1737479898
 MonoBehaviour:
@@ -5893,6 +5896,7 @@ MonoBehaviour:
   - {fileID: 1112689550}
   - {fileID: 1951077522}
   feedbackText: {fileID: 1184791889}
+  playerFish: {fileID: 1939046372}
 --- !u!58 &1789257840
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -5928,7 +5932,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.2
+  m_Radius: 0.1
 --- !u!114 &1789257841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6250,7 +6254,7 @@ Transform:
   m_GameObject: {fileID: 1939046369}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.6, y: 0.32, z: 0}
+  m_LocalPosition: {x: -2.6, y: 0.3236, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6303,6 +6307,7 @@ MonoBehaviour:
   - {fileID: 1112689550}
   - {fileID: 1951077522}
   feedbackText: {fileID: 1184791889}
+  playerFish: {fileID: 1939046372}
 --- !u!1 &1951077518
 GameObject:
   m_ObjectHideFlags: 0
@@ -6340,7 +6345,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 30}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1951077520
 MonoBehaviour:

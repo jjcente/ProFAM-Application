@@ -101,18 +101,46 @@ public class QuizFish : MonoBehaviour
         screenMax = new Vector2(topRight.x, topRight.y);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+private void OnTriggerEnter2D(Collider2D other)
+{
+    if (!hasTriggered && other.CompareTag("Player"))
     {
-        if (!hasTriggered && other.CompareTag("Player"))
-        {
-            hasTriggered = true;
-            Debug.Log($"QuizFish #{quizNumber} collided with Player — triggering quiz!");
+        // Check distance to avoid accidental triggers from far away
+        float maxTriggerDistance = 2f; // adjust as needed
+        if (Vector2.Distance(transform.position, other.transform.position) > maxTriggerDistance)
+            return;
 
-            if (quizManager != null)
-                quizManager.TriggerQuiz(gameObject, quizNumber);
-            else
-                Debug.LogWarning("QuizManager not assigned in QuizFish!");
+        hasTriggered = true;
+
+        // Get the UserFish component from the player
+        UserFish player = other.GetComponent<UserFish>();
+        if (player == null)
+        {
+            Debug.LogWarning("Player does not have a UserFish component!");
+            return;
         }
+
+        // Set the playerFish reference in QuizManager
+        if (quizManager != null)
+        {
+            quizManager.playerFish = player;
+
+            // Trigger the quiz
+            quizManager.TriggerQuiz(gameObject, quizNumber);
+
+            // Only pause time if the quiz panel actually shows up
+            if (quizManager.quizPanel != null && !quizManager.quizPanel.activeSelf)
+                Time.timeScale = 1f; // keep normal time until quiz shows
+            else
+                Time.timeScale = 0f;
+        }
+        else
+        {
+            Debug.LogWarning("QuizManager not assigned in QuizFish!");
+        }
+
+        Debug.Log($"🐠 QuizFish #{quizNumber} triggered quiz for PlayerFish.");
     }
+}
 }
 
