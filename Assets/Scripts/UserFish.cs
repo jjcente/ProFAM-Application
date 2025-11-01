@@ -1,73 +1,140 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UserFish : MonoBehaviour
 {
-    public float speed = 2f;                   // Movement speed
-    public float bottomBuffer = 0.5f;          // How far above the bottom edge the fish can go
-    public QuizManager quizManager;            // Reference to QuizManager for showing questions
+    [Header("Movement Settings")]
+    public float speed = 5f;                  
+    public QuizManager quizManager;           
 
+    private Vector2 moveDirection = Vector2.zero;
     private Camera mainCam;
-    private Vector2 screenMin;
-    private Vector2 screenMax;
+    private bool facingRight = true; 
 
-    void Start()
+    private void Start()
     {
         mainCam = Camera.main;
-        UpdateScreenBounds();
     }
 
-    void Update()
+    private void Update()
     {
-        UpdateScreenBounds();
-
-        // ✅ Move steadily to the right
-        transform.Translate(Vector2.right * speed * Time.deltaTime, Space.World);
-
-        // ✅ Flip sprite if needed (face right)
-        Vector3 scale = transform.localScale;
-        if (scale.x < 0)
-        {
-            scale.x *= -1;
-            transform.localScale = scale;
-        }
-
-        // ✅ Keep fish within screen horizontally (loop around)
-        Vector3 pos = transform.position;
-
-        if (pos.x > screenMax.x)
-        {
-            pos.x = screenMin.x; // reappear from the left
-        }
-
-        // ✅ Keep it within vertical range
-        float adjustedMinY = screenMin.y + bottomBuffer;
-        pos.y = Mathf.Clamp(pos.y, adjustedMinY, screenMax.y);
-
-        transform.position = pos;
+        HandleMovement();
     }
 
-    void UpdateScreenBounds()
+    private void HandleMovement()
     {
-        Vector3 bottomLeft = mainCam.ScreenToWorldPoint(Vector3.zero);
-        Vector3 topRight = mainCam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+        if (moveDirection.sqrMagnitude > 0.01f)
+        {
+            Vector3 movement = new Vector3(moveDirection.x, moveDirection.y, 0f) * speed * Time.deltaTime;
+            transform.Translate(movement, Space.World);
 
-        screenMin = new Vector2(bottomLeft.x, bottomLeft.y);
-        screenMax = new Vector2(topRight.x, topRight.y);
+            HandleFlip(moveDirection.x); // 👈 Flip when moving horizontally
+        }
+    }
+
+    // 🐟 Flip sprite when moving left/right
+    private void HandleFlip(float horizontal)
+    {
+        if (horizontal > 0 && !facingRight)
+        {
+            Flip();
+        }
+        else if (horizontal < 0 && facingRight)
+        {
+            Flip();
+        }
+    }
+
+    private void Flip()
+    {
+        facingRight = !facingRight;
+        Vector3 localScale = transform.localScale;
+        localScale.x *= -1; // 🔁 Flip horizontally
+        transform.localScale = localScale;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Fish") || other.CompareTag("Player"))
-        {
-            Debug.Log("Fish collision detected!");
+        Time.timeScale = 0f;
 
-            Time.timeScale = 0f;
+        float maxTriggerDistance = 2f; // adjust as needed
+        if (Vector2.Distance(transform.position, other.transform.position) > maxTriggerDistance)
+        return;
+
+        QuizFish quizFish = other.GetComponent<QuizFish>();
+        if (quizFish != null)
+        {
+            Debug.Log($"🐠 User collided with QuizFish #{quizFish.quizNumber}");
 
             if (quizManager != null)
-                quizManager.ShowQuiz();
-            else
-                Debug.LogWarning("QuizManager not assigned in the Inspector!");
+                quizManager.TriggerQuiz(other.gameObject, quizFish.quizNumber);
+            else 
+                Time.timeScale = 1f;
         }
+    }
+
+    // 🕹️ Button Movement Controls
+    public void MoveUp()    
+    { 
+        moveDirection = Vector2.up; 
+        Debug.Log("MoveUp() pressed"); 
+    }
+
+    public void MoveDown()  
+    { 
+        moveDirection = Vector2.down; 
+        Debug.Log("MoveDown() pressed"); 
+    }
+
+    public void MoveLeft()  
+    { 
+        moveDirection = Vector2.left; 
+        HandleFlip(-1); 
+        Debug.Log("MoveLeft() pressed"); 
+    }
+
+    public void MoveRight() 
+    { 
+        moveDirection = Vector2.right; 
+        HandleFlip(1); 
+        Debug.Log("MoveRight() pressed"); 
+    }
+
+    public void StopMove()  
+    { 
+        moveDirection = Vector2.zero; 
+        Debug.Log("StopMove() pressed"); 
+    }
+
+    public void Grow(float amount)
+    {
+        transform.localScale += new Vector3(amount, amount, amount);
+    }
+
+    public void Shrink(float amount)
+    {
+        transform.localScale -= new Vector3(amount, amount, amount);
+    }
+
+
+    // ✅ EventSystem reset (if quiz re-enables input later)
+    public void ForceUpdateAfterQuiz()
+    {
+        Debug.Log("🔄 ForceUpdateAfterQuiz called");
+        if (EventSystem.current != null)
+        {
+            StartCoroutine(EnableEventSystemNextFrame());
+        }
+    }
+
+    private IEnumerator EnableEventSystemNextFrame()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.enabled = false;
+        yield return null;
+        EventSystem.current.enabled = true;
+        Debug.Log("✅ EventSystem fully refreshed next frame.");
     }
 }
 

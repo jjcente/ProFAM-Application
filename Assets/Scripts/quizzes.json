@@ -1,0 +1,135 @@
+{
+  "quizzes": [
+    {
+      "quizNumber": 1,
+      "problem": "A school is organizing a 5‑day fundraiser to sell homemade cookies and lemonade, with the proceeds going towards purchasing new library books. On Day 1, they sell 20 cookies and 15 cups of lemonade. Each subsequent day, cookies sold increase by 5, and lemonade cups increase by 3. Cookies sell for ₱112 and lemonade for ₱84.",
+      "subQuestions": [
+        {
+          "question": "a.) Analyze whether the sales pattern meets the supplier’s minimum of 130 cookies over 5 days. If not, suggest how many additional cookies should be sold on the last day to meet the requirement.",
+          "correct": "b",
+          "options": [
+            "a) Yes, it meets the requirement; no change needed.",
+            "b) No, they need to sell 5 more cookies on the last day.",
+            "c) No, they need to sell 10 more cookies on the last day.",
+            "d) No, they need to sell 15 more cookies on the last day."
+          ]
+        },
+        {
+          "question": "b.) Calculate the total revenue from lemonade sales over the 5 days, then reason if increasing lemonade sales by 2 cups daily would increase total revenue by more than ₱840.",
+          "correct": "b",
+          "options": [
+            "a) Total revenue is ₱4,620; increasing sales adds less than ₱840.",
+            "b) Total revenue is ₱4,620; increasing sales adds exactly ₱840.",
+            "c) Total revenue is ₱4,620; increasing sales adds more than ₱840.",
+            "d) Total revenue is ₱5,040; increasing sales adds more than ₱840."
+          ]
+        }
+      ]
+    },
+    {
+      "quizNumber": 2,
+      "problem": "A gardener grows sunflowers that increase their height by 5 cm per week. After 4 weeks, the tallest sunflower is 60 cm tall.",
+      "subQuestions": [
+        {
+          "question": "a.) How tall was the sunflower initially?",
+          "correct": "c",
+          "options": [
+            "a) 30 cm",
+            "b) 35 cm",
+            "c) 40 cm",
+            "d) 45 cm"
+          ]
+        },
+        {
+          "question": "b.) If the growth continues for 3 more weeks, what will be its final height?",
+          "correct": "b",
+          "options": [
+            "a) 80 cm",
+            "b) 85 cm",
+            "c) 90 cm",
+            "d) 95 cm"
+          ]
+        }
+      ]
+    },
+    {
+      "quizNumber": 3,
+      "problem": "A car travels 180 km in 3 hours at average speed. The driver wants to reduce travel time by 30 minutes without changing distance.",
+      "subQuestions": [
+        {
+          "question": "a.) What is the car’s current average speed?",
+          "correct": "c",
+          "options": [
+            "a) 50 km/h",
+            "b) 55 km/h",
+            "c) 60 km/h",
+            "d) 65 km/h"
+          ]
+        },
+        {
+          "question": "b.) What should the new average speed be to save 30 minutes?",
+          "correct": "b",
+          "options": [
+            "a) 65 km/h",
+            "b) 70 km/h",
+            "c) 75 km/h",
+            "d) 80 km/h"
+          ]
+        }
+      ]
+    },
+    {
+      "quizNumber": 4,
+      "problem": "A rectangle has a length that is 3 meters longer than twice its width. If the perimeter is 36 meters:",
+      "subQuestions": [
+        {
+          "question": "a.) What is the width of the rectangle?",
+          "correct": "b",
+          "options": [
+            "a) 4 m",
+            "b) 5 m",
+            "c) 6 m",
+            "d) 7 m"
+          ]
+        },
+        {
+          "question": "b.) What is its area?",
+          "correct": "c",
+          "options": [
+            "a) 50 m²",
+            "b) 54 m²",
+            "c) 60 m²",
+            "d) 64 m²"
+          ]
+        }
+      ]
+    },
+    {
+      "quizNumber": 5,
+      "problem": "A water tank can be filled by a pipe in 12 hours and emptied by a drain in 18 hours. Both are accidentally left open.",
+      "subQuestions": [
+        {
+          "question": "a.) How long will it take to fill the tank with both open?",
+          "correct": "b",
+          "options": [
+            "a) 24 h",
+            "b) 30 h",
+            "c) 36 h",
+            "d) 40 h"
+          ]
+        },
+        {
+          "question": "b.) If the drain rate doubles, what happens to the fill time?",
+          "correct": "a",
+          "options": [
+            "a) It empties instead",
+            "b) It fills in 24 h",
+            "c) It fills in 48 h",
+            "d) It remains unchanged"
+          ]
+        }
+      ]
+    }
+  ]
+}
+
