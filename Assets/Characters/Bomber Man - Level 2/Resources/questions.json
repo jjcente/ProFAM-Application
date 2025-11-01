@@ -1,0 +1,42 @@
+[
+  {
+    "question": "What is 9 + 13?",
+    "answers": ["22", "21", "20", "23"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Which planet is known as the Red Planet?",
+    "answers": ["Earth", "Mars", "Venus", "Jupiter"],
+    "correctIndex": 1
+  },
+  {
+    "question": "What is the capital of France?",
+    "answers": ["Berlin", "London", "Paris", "Rome"],
+    "correctIndex": 2
+  },
+  {
+    "question": "Analyze whether the current sales pattern meets the supplier’s minimum cookie order of 130 cookies over 5 days. If not, suggest how many additional cookies should be sold on the last day to meet the requirement.",
+    "answers": [
+      "Yes, it meets the requirement; no change needed.",
+      "No, they need to sell 5 more cookies on the last day.",
+      "No, they need to sell 10 more cookies on the last day.",
+      "No, they need to sell 15 more cookies on the last day."
+    ],
+    "correctIndex": 1
+  },
+  {
+    "question": "Which gas do humans need to breathe in order to survive?",
+    "answers": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+    "correctIndex": 0
+  },
+  {
+    "question": "What is the largest mammal on Earth?",
+    "answers": ["Elephant", "Blue Whale", "Giraffe", "Hippopotamus"],
+    "correctIndex": 1
+  },
+  {
+    "question": "What is the freezing point of water in Celsius?",
+    "answers": ["0°C", "32°C", "-10°C", "100°C"],
+    "correctIndex": 0
+  }
+]

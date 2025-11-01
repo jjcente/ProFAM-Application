@@ -30,7 +30,7 @@ public class Animation : MonoBehaviour
     {
         InvokeRepeating(nameof(NextFrame), animationTime, animationTime);
     }
-    
+
     private void NextFrame()
     {
         animationFrame++;
@@ -44,10 +44,16 @@ public class Animation : MonoBehaviour
         {
             spriterender.sprite = idleSprite;
 
-        } else if (animationFrame >= 0 && animationFrame < animationSprites.Length)
+        }
+        else if (animationFrame >= 0 && animationFrame < animationSprites.Length)
         {
             spriterender.sprite = animationSprites[animationFrame];
         }
     }
+    
+    public void Stop()
+{
+    idle = true;
+}
 
 }

@@ -9,7 +9,7 @@ public class BombManager : MonoBehaviour
     [Header("Bomb spawning")]
     public GameObject bombPrefab;
     public int bombCount = 5;
-    public TilemapHelper tilemapHelper; // optional helper to pick walkable cells (see below)
+    public TilemapHelper tilemapHelper;
     public Vector2 spawnAreaMin;
     public Vector2 spawnAreaMax;
 
@@ -66,7 +66,6 @@ public class BombManager : MonoBehaviour
 
     Vector3 GetRandomSpawnPosition()
     {
-        // If you have a TilemapHelper that returns a walkable cell center, prefer that.
         if (tilemapHelper != null)
         {
             Vector3Int cell = tilemapHelper.GetRandomWalkableCell();
@@ -81,7 +80,6 @@ public class BombManager : MonoBehaviour
     public void OnBombDefused(Bomb b)
     {
         defused++;
-        bombs.Remove(b);
         if (defused >= bombCount)
         {
             levelOver = true;
@@ -89,19 +87,67 @@ public class BombManager : MonoBehaviour
         }
     }
 
-    void OnTimerExpired()
+    public void OnBombExploded(Bomb b)
     {
-        // time up -> fail
-        Debug.Log("Time expired! Level failed.");
-        // Option: trigger explode on remaining bombs
-        foreach (var b in bombs.ToArray())
-            b.Explode();
-        // restart or show fail UI (your choice)
+        Debug.Log($"💥 Bomb exploded: {b.name}");
+
+        bombs.Remove(b);
+
+        Debug.Log("💀 A bomb exploded! Mission failed!");
+
     }
+
+void OnTimerExpired()
+{
+    Debug.Log("⏰ Time expired! Restarting full round...");
+
+    foreach (var b in bombs.ToArray())
+        b.Explode();
+
+    // Reset timer
+    timer = sharedTime;
+    levelOver = false;
+
+    // Respawn player and bombs
+    var player = FindFirstObjectByType<PlayerMovementController>();
+    if (player != null)
+        player.Respawn();
+
+    ResetLevelWithoutTimer();
+}
+
+
+
 
     void OnAllBombsDefused()
     {
         Debug.Log("All bombs defused! Level success.");
-        // show success UI / progress to next level
     }
+
+    public bool IsTimerRunning()
+    {
+        return timer > 0f && !levelOver;
+    }
+
+public void ResetLevelWithoutTimer()
+{
+    Debug.Log("🔄 Soft resetting level (timer unaffected)");
+
+    // Clear existing bombs
+    foreach (var b in bombs.ToArray())
+    {
+        if (b != null)
+            Destroy(b.gameObject);
+    }
+    bombs.Clear();
+
+    defused = 0;
+    levelOver = false;
+    
+    QuestionDatabase.Instance.ResetQuestions();
+
+
+    // Respawn bombs
+    SpawnBombs();
+}
 }
