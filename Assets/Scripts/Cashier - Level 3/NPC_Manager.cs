@@ -8,6 +8,9 @@ public class NPCManager : MonoBehaviour
     private int currentIndex = 0;
     private GameObject activeNPC;
 
+    // ✅ Add this line — reference to ResultManager
+    public ResultManager resultManager;
+
     void Start()
     {
         // Deactivate all NPCs at start
@@ -36,6 +39,9 @@ public class NPCManager : MonoBehaviour
             if (controller != null)
             {
                 controller.manager = this;
+
+                // ✅ Also pass ResultManager reference to each NPC
+                controller.resultManager = resultManager;
             }
 
             activeNPC = npc;
@@ -44,6 +50,16 @@ public class NPCManager : MonoBehaviour
         else
         {
             Debug.Log("✅ All NPCs finished!");
+
+            // ✅ When all NPCs are done, show final result
+            if (resultManager != null)
+            {
+                resultManager.ShowFinalResult(NPCController.totalScore);
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ ResultManager not assigned in NPCManager!");
+            }
         }
     }
 
