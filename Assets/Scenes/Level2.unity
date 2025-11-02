@@ -6914,7 +6914,7 @@ MonoBehaviour:
   tilemapHelper: {fileID: 1792808942}
   spawnAreaMin: {x: 0, y: 0}
   spawnAreaMax: {x: 0, y: 0}
-  sharedTime: 10
+  sharedTime: 300
   sharedTimerText: {fileID: 574670150}
 --- !u!114 &1837142882
 MonoBehaviour:
