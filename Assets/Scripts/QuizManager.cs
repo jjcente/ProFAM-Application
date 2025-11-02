@@ -35,6 +35,10 @@ public class QuizManager : MonoBehaviour
     public List<Button> choiceButtons;
     public TextMeshProUGUI feedbackText;
 
+    [Header("Score System")]
+    public TextMeshProUGUI scoreText;  // Drag your score UI Text here in the Inspector
+    private int score = 0;
+
     private GameObject targetFish;    
     public UserFish playerFish;     
     private string correctAnswer = "";
@@ -46,6 +50,9 @@ public class QuizManager : MonoBehaviour
 
     private void Start()
     {
+        score = 0;
+        UpdateScoreUI(); // ✅ Shows "Score: 0" at start
+
         LoadQuizzesFromJSON();
 
         if (quizPanel != null)
@@ -69,7 +76,7 @@ public class QuizManager : MonoBehaviour
 
     private void LoadQuizzesFromJSON()
     {
-        TextAsset quizJSON = Resources.Load<TextAsset>("quizzes"); // quizzes.json in Resources folder
+        TextAsset quizJSON = Resources.Load<TextAsset>("quizzes");
         if (quizJSON != null)
         {
             allQuizzes = JsonUtility.FromJson<QuizCollection>(quizJSON.text);
@@ -80,7 +87,6 @@ public class QuizManager : MonoBehaviour
         }
     }
 
-    // Call this from QuizFish on collision
     public void SetPlayerFish(UserFish player)
     {
         playerFish = player;
@@ -182,6 +188,10 @@ public class QuizManager : MonoBehaviour
             feedbackText.text = "Correct!";
             feedbackText.color = Color.green;
 
+            // ✅ Increase score
+            score += 10;
+            UpdateScoreUI(); // <--- make sure score updates live
+
             if (playerFish != null)
             {
                 float growthAmount = 0.2f;
@@ -209,6 +219,14 @@ public class QuizManager : MonoBehaviour
         }
     }
 
+    private void UpdateScoreUI()
+    {
+        if (scoreText != null)
+        {
+            scoreText.text = $"Score: {score}";
+        }
+    }
+
     private IEnumerator NextSubQuestionAfterDelay(float delay)
     {
         yield return new WaitForSecondsRealtime(delay);
@@ -219,7 +237,7 @@ public class QuizManager : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(delay);
         if (targetFish != null)
-            Destroy(targetFish); // destroy quiz fish only on correct answer
+            Destroy(targetFish);
 
         HideQuiz();
     }
@@ -227,7 +245,7 @@ public class QuizManager : MonoBehaviour
     private IEnumerator CloseQuizAfterDelayWrongAnswer(float delay)
     {
         yield return new WaitForSecondsRealtime(delay);
-        HideQuiz(); // closes quiz but does NOT destroy quiz fish
+        HideQuiz();
     }
 
     public void HideQuiz()
@@ -245,7 +263,6 @@ public class QuizManager : MonoBehaviour
         }
 
         Time.timeScale = 1f;
-
         targetFish = null;
         StartCoroutine(ResetEventSystemNextFrame());
         Debug.Log("🎯 Quiz closed — gameplay resumed!");

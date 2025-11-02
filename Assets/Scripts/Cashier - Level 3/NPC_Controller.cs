@@ -8,19 +8,24 @@ public class NPCController : MonoBehaviour
 {
     public Transform counterPoint;
     public Transform exitPoint;
-    public Transform topScreenPosition; // Position for dialogue at top of screen
-    public Transform defaultDialoguePosition; // Default dialogue position (before moving)
+    public Transform topScreenPosition;
+    public Transform defaultDialoguePosition;
     public float moveSpeed = 2f;
     public TextMeshProUGUI dialogueText;
-    public TextMeshProUGUI timerText;   // Timer display text (no clock icon)
+    public TextMeshProUGUI timerText;
     public GameObject dialogueCanvas;
-    public GameObject choicePanel;      // Panel containing 3 answer buttons
-    public Button[] choiceButtons;      // The 3 buttons inside the panel
+    public GameObject choicePanel;
+    public Button[] choiceButtons;
     public NPCManager manager;
 
-    // 🎵 Audio
-    public AudioSource correctAnswerAudio;  // For correct answer sound
-    public AudioSource wrongAnswerAudio;    // For wrong answer sound
+    public AudioSource correctAnswerAudio;
+    public AudioSource wrongAnswerAudio;
+
+    public GameObject cashAnimation;
+    public float animationDuration = 2f;
+
+    public static int totalScore = 0;
+    public static int npcCount = 0;
 
     private bool movingToCounter = true;
     private bool interacted = false;
@@ -31,19 +36,21 @@ public class NPCController : MonoBehaviour
     private string currentAnswer;
     private Coroutine answerTimerCoroutine;
 
-    // Simple 10 PISA-style questions
+    // Reference to ResultManager
+    public ResultManager resultManager;
+
     private static List<(string question, string answer, string[] choices)> questions = new List<(string, string, string[])>
     {
-        ("If a pencil costs 10 pesos and a notebook costs 5 times more, how much is the notebook?", "50", new string[]{"40", "50", "60"}),
-        ("A train leaves at 3:00 PM and arrives at 5:30 PM. How long is the trip?", "2.5", new string[]{"3", "2.5", "2"}),
-        ("You have ₱500 and spend ₱275. How much is left?", "225", new string[]{"200", "225", "250"}),
-        ("A pizza is cut into 8 equal slices. If you eat 3, what fraction is left?", "5/8", new string[]{"3/8", "5/8", "4/8"}),
-        ("If water freezes at 0°C, what is this in °F?", "32", new string[]{"0", "32", "100"}),
-        ("There are 24 hours in a day. How many hours in 3 days?", "72", new string[]{"60", "72", "48"}),
-        ("If 6 apples cost ₱60, how much for 1 apple?", "10", new string[]{"5", "10", "15"}),
-        ("Your phone battery drops from 100% to 40%. How much percentage is used?", "60", new string[]{"40", "50", "60"}),
-        ("If a rectangle’s length is 8 and width is 3, what’s its area?", "24", new string[]{"20", "24", "28"}),
-        ("If 12 students share 3 pizzas equally, how many slices does each get if each pizza has 8 slices?", "2", new string[]{"3", "4", "2"})
+        ("A student wants to subscribe to an online e-book library. Plan A: ₱4,500 per year. Plan B: ₱150/month + ₱30 per e-book (10 books/month). When is Plan A cheaper?", "12 months", new string[]{"7 months", "10 months", "12 months"}),
+        ("A coffee shop uses 2.5 kg of coffee beans every day. Bags are 12 kg each. How many bags are needed for 14 days?", "3 bags", new string[]{"3 bags", "4 bags", "5 bags"}),
+        ("A school replaces 85 bulbs. Single: ₱150 each, or 12 for ₱585. What is the total minimum cost?", "₱4,950.00", new string[]{"₱4,920.00", "₱4,950.00", "₱5,010.00"}),
+        ("2.5 liters of paint cover 20 sqm. How many liters for 70 sqm?", "8.75 liters", new string[]{"7.5 liters", "8.75 liters", "10.0 liters"}),
+        ("A souvenir costs $150. Exchange rate: ₱55 = $1. How much in pesos?", "₱8,250.00", new string[]{"₱8,400.00", "₱8,250.00", "₱7,950.00"}),
+        ("200g of butter makes 24 cookies. How much for 60 cookies?", "500 g", new string[]{"400 g", "500 g", "600 g"}),
+        ("A van travels 360 km using 45L. With 10L left, how far can it go?", "80 km", new string[]{"80 km", "90 km", "100 km"}),
+        ("A box of 10 pens costs ₱80. A single pen costs ₱10. How much is saved per pen?", "₱2.00", new string[]{"₱1.00", "₱1.50", "₱2.00"}),
+        ("A 500 km trip uses 10L per 100 km. Fuel costs ₱50/L. What is the total cost?", "₱2,500.00", new string[]{"₱2,000.00", "₱2,500.00", "₱3,000.00"}),
+        ("A machine makes 150 items in 20 minutes. How many in 3 hours?", "1,350 items", new string[]{"900 items", "1,125 items", "1,350 items"})
     };
 
     void Start()
@@ -56,6 +63,9 @@ public class NPCController : MonoBehaviour
 
         if (timerText != null)
             timerText.gameObject.SetActive(false);
+
+        if (cashAnimation != null)
+            cashAnimation.SetActive(false);
     }
 
     void Update()
@@ -65,7 +75,6 @@ public class NPCController : MonoBehaviour
             if (movingToCounter && !interacted)
             {
                 MoveTo(counterPoint.position);
-
                 if (Vector2.Distance(transform.position, counterPoint.position) < 0.05f)
                 {
                     StartCoroutine(Interact());
@@ -74,13 +83,22 @@ public class NPCController : MonoBehaviour
             else if (interacted)
             {
                 MoveTo(exitPoint.position);
-
                 if (Vector2.Distance(transform.position, exitPoint.position) < 0.05f)
                 {
-                    if (manager != null)
-                        manager.SpawnNextNPC();
+                    npcCount++;
+                    if (npcCount >= 10)
+                    {
+                        // ✅ Call ResultManager here instead of local function
+                        if (resultManager != null)
+                            resultManager.ShowFinalResult(totalScore);
+                    }
+                    else
+                    {
+                        if (manager != null)
+                            manager.SpawnNextNPC();
 
-                    Destroy(gameObject);
+                        Destroy(gameObject);
+                    }
                 }
             }
         }
@@ -111,73 +129,57 @@ public class NPCController : MonoBehaviour
         string[] choices = questions[randomIndex].choices;
         questions.RemoveAt(randomIndex);
 
-        // Show question
-        if (dialogueCanvas != null)
-            dialogueCanvas.SetActive(true);
-
-        if (dialogueText != null)
-            dialogueText.text = currentQuestion;
+        dialogueCanvas.SetActive(true);
+        dialogueText.text = currentQuestion;
 
         yield return new WaitForSeconds(4f);
 
-        // Move dialogue to top
-        if (topScreenPosition != null && dialogueCanvas != null)
+        if (topScreenPosition != null)
         {
             dialogueCanvas.transform.position = topScreenPosition.position;
             dialogueCanvas.transform.rotation = topScreenPosition.rotation;
         }
 
-        // Show choices
-        if (choicePanel != null)
-        {
-            choicePanel.SetActive(true);
-
-            // Randomize button order
-            List<string> shuffled = new List<string>(choices);
-            for (int i = 0; i < shuffled.Count; i++)
-            {
-                string temp = shuffled[i];
-                int random = Random.Range(i, shuffled.Count);
-                shuffled[i] = shuffled[random];
-                shuffled[random] = temp;
-            }
-
-            for (int i = 0; i < choiceButtons.Length; i++)
-            {
-                if (i < shuffled.Count)
-                {
-                    string answer = shuffled[i];
-                    choiceButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = answer;
-                    choiceButtons[i].onClick.RemoveAllListeners();
-                    choiceButtons[i].onClick.AddListener(() =>
-                    {
-                        SubmitChoice(answer);
-                    });
-                }
-            }
-        }
+        choicePanel.SetActive(true);
+        SetupChoices(choices);
 
         waitingForAnswer = true;
-
-        // Start 10-second timer
         answerTimerCoroutine = StartCoroutine(AnswerTimer());
-
         yield return new WaitUntil(() => !waitingForAnswer);
 
-        if (dialogueCanvas != null)
-            dialogueCanvas.SetActive(false);
-
-        if (timerText != null)
-            timerText.gameObject.SetActive(false);
+        dialogueCanvas.SetActive(false);
+        timerText.gameObject.SetActive(false);
 
         interacted = true;
         isInteracting = false;
     }
 
+    void SetupChoices(string[] choices)
+    {
+        List<string> shuffled = new List<string>(choices);
+        for (int i = 0; i < shuffled.Count; i++)
+        {
+            string temp = shuffled[i];
+            int random = Random.Range(i, shuffled.Count);
+            shuffled[i] = shuffled[random];
+            shuffled[random] = temp;
+        }
+
+        for (int i = 0; i < choiceButtons.Length; i++)
+        {
+            if (i < shuffled.Count)
+            {
+                string answer = shuffled[i];
+                choiceButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = answer;
+                choiceButtons[i].onClick.RemoveAllListeners();
+                choiceButtons[i].onClick.AddListener(() => SubmitChoice(answer));
+            }
+        }
+    }
+
     public void SubmitChoice(string selectedAnswer)
     {
         if (!waitingForAnswer) return;
-
         StopCoroutine(answerTimerCoroutine);
 
         string result;
@@ -186,35 +188,38 @@ public class NPCController : MonoBehaviour
         {
             result = "Here's Your Change!";
             PlayCorrectSound();
+            totalScore += 2;
+            StartCoroutine(ShowCashAnimation());
         }
         else
         {
             result = $"Wrong! The correct answer is {currentAnswer}.";
             PlayWrongSound();
+            totalScore -= 1;
         }
 
-        if (choicePanel != null)
-            choicePanel.SetActive(false);
-
+        choicePanel.SetActive(false);
         StartCoroutine(ShowResultAndReturn(result));
+    }
+
+    IEnumerator ShowCashAnimation()
+    {
+        if (cashAnimation != null)
+        {
+            cashAnimation.SetActive(true);
+            yield return new WaitForSeconds(animationDuration);
+            cashAnimation.SetActive(false);
+        }
     }
 
     IEnumerator ShowResultAndReturn(string result)
     {
-        if (defaultDialoguePosition != null && dialogueCanvas != null)
-        {
-            dialogueCanvas.transform.position = defaultDialoguePosition.position;
-            dialogueCanvas.transform.rotation = defaultDialoguePosition.rotation;
-        }
+        dialogueCanvas.transform.position = defaultDialoguePosition.position;
+        dialogueCanvas.transform.rotation = defaultDialoguePosition.rotation;
 
-        if (dialogueText != null)
-        {
-            dialogueText.text = result;
-            dialogueCanvas.SetActive(true);
-        }
-
-        if (timerText != null)
-            timerText.gameObject.SetActive(false);
+        dialogueText.text = result;
+        dialogueCanvas.SetActive(true);
+        timerText.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(2f);
         waitingForAnswer = false;
@@ -223,54 +228,33 @@ public class NPCController : MonoBehaviour
     IEnumerator AnswerTimer()
     {
         float timer = 10f;
-
-        if (timerText != null)
-        {
-            timerText.gameObject.SetActive(true);
-            timerText.text = "10s";
-        }
+        timerText.gameObject.SetActive(true);
 
         while (timer > 0f)
         {
             timer -= Time.deltaTime;
-
-            if (timerText != null)
-                timerText.text = Mathf.CeilToInt(timer).ToString() + "s";
-
+            timerText.text = Mathf.CeilToInt(timer) + "s";
             yield return null;
 
             if (!waitingForAnswer)
                 yield break;
         }
 
-        // Time's up
-        if (choicePanel != null)
-            choicePanel.SetActive(false);
-
-        if (defaultDialoguePosition != null && dialogueCanvas != null)
-        {
-            dialogueCanvas.transform.position = defaultDialoguePosition.position;
-            dialogueCanvas.transform.rotation = defaultDialoguePosition.rotation;
-        }
-
-        if (dialogueText != null)
-            dialogueText.text = "Time’s up!!";
-
-        if (timerText != null)
-            timerText.gameObject.SetActive(false);
+        choicePanel.SetActive(false);
+        dialogueCanvas.transform.position = defaultDialoguePosition.position;
+        dialogueText.text = "Time’s up!!";
+        timerText.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(2f);
         waitingForAnswer = false;
     }
 
-    // ✅ Correct answer sound
     public void PlayCorrectSound()
     {
         if (correctAnswerAudio != null && correctAnswerAudio.clip != null)
             correctAnswerAudio.Play();
     }
 
-    // ❌ Wrong answer sound
     public void PlayWrongSound()
     {
         if (wrongAnswerAudio != null && wrongAnswerAudio.clip != null)
