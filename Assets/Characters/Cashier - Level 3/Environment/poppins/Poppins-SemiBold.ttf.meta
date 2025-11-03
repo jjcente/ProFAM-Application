@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b20fd57f5847113d3b10741b7dc6ff66
+guid: 0fec56f170004b544b5ab532d672d0ac
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - VCR OSD Mono
+  - Poppins
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
