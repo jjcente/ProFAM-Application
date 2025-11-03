@@ -98,7 +98,7 @@ public void Explode()
     if (col != null) col.enabled = false;
 
     BombManager.Instance?.OnBombExploded(this);
-    Destroy(gameObject);
+    
 }
 
 }
