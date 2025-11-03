@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using TMPro;
+using UnityEngine.SceneManagement;
+using NUnit.Framework;
 
 public class BombManager : MonoBehaviour
 {
@@ -28,7 +30,7 @@ public class BombManager : MonoBehaviour
     public Transform portalSpawnPoint;
     public float timeBeforePlayerMoves = 1f;
     public float playerMoveDuration = 1.2f;
-    public string nextSceneName = "Level3";
+    public string nextSceneName = "Level 3";
     public AudioClip winClip;
 
     private void Awake()
@@ -164,19 +166,22 @@ IEnumerator HandlePlayerWinSequence(PlayerMovementController player)
 
     player.transform.position = player.spawnPoint.position;
 
-    Vector3 exitPos = player.spawnPoint.position + Vector3.right * 3f;
+    Vector3 exitPos = portalSpawnPoint != null ? portalSpawnPoint.position : player.spawnPoint.position + Vector3.right * 3f;
+GameObject portalObj = Instantiate(portalPrefab, exitPos, Quaternion.identity);
 
-    GameObject fakePortal = new GameObject("FakePortal");
-    fakePortal.transform.position = exitPos;
+    Portal portal = portalObj.GetComponent<Portal>();
+
 
     player.ForceFaceDirection(Vector2.right);
 
     yield return player.StartCoroutine(player.MoveToPortalAndWin(
-        fakePortal.transform, playerMoveDuration));
+        portal.transform, playerMoveDuration));
 
     yield return new WaitForSeconds(0.5f);
-    Debug.Log("➡️ Loading next level...");
-   // SceneManager.LoadScene(nextSceneName);
+        Debug.Log("➡️ Loading next level...");
+    
+    if (portal != null)
+        yield return portal.StartCoroutine(portal.ActivateAndLoadNextScene(0.1f, nextSceneName));
 }
 
 

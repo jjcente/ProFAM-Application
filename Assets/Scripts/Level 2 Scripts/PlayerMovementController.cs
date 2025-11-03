@@ -206,7 +206,6 @@ public class PlayerMovementController : MonoBehaviour
         Vector3 endPos = portal.position;
         float elapsed = 0f;
 
-        // Set facing direction before moving
         Vector2 dir = (endPos - startPos).normalized;
         if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
             SetDirection(dir.x > 0 ? Vector2.right : Vector2.left,
@@ -225,11 +224,6 @@ public class PlayerMovementController : MonoBehaviour
         transform.position = endPos;
         Debug.Log("✅ Player entered portal!");
 
-        // 🔮 [PORTAL FUTURE HOOK]
-        // After player reaches portal, you can:
-        // - Play portal disappear animation
-        // - Trigger level transition (SceneManager.LoadScene)
-        // - Play SFX / particles
     }
     
     public void ForceFaceDirection(Vector2 dir)
