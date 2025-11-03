@@ -80,9 +80,9 @@ public class NPCController : MonoBehaviour
          "1350 ITEMS", new string[]{"900 ITEMS", "1125 ITEMS", "1350 ITEMS"},
          "SOLUTION: 3 hr = 180 min, 180 ÷ 20 = 9, 150 × 9 = 1350 items"),
 
-        ("A SURVEY ESTIMATES THAT 80% ±5% OF CUSTOMERS PREFER COFFEE OVER TEA. IF THERE ARE 200 CUSTOMERS, WHAT IS THE RANGE OF CUSTOMERS THAT MIGHT PREFER COFFEE?",
-         "150 TO 170 CUSTOMERS", new string[]{"150 TO 170 CUSTOMERS", "155 TO 165 CUSTOMERS", "160 TO 180 CUSTOMERS"},
-         "SOLUTION: 80% of 200 = 160, ±5% of 200 = ±10, Range = 150 to 170 customers")
+        ("OUT OF 200 CUSTOMERS, 80% PREFER COFFEE. HOW MANY CUSTOMERS IS THAT?",
+         "160 CUSTOMERS", new string[]{"150 CUSTOMERS", "160", "170"},
+         "SOLUTION: 80% × 200 = 160 ")
     };
 
     private static List<(string question, string answer, string[] choices, string solution)> questions =
@@ -138,7 +138,6 @@ public class NPCController : MonoBehaviour
         if (questions.Count == 0)
         {
             dialogueText.text = "NO MORE QUESTIONS LEFT!";
-            AdjustDialogueBoxSize();
             yield return new WaitForSeconds(2f);
             interacted = true;
             isInteracting = false;
@@ -154,7 +153,6 @@ public class NPCController : MonoBehaviour
 
         dialogueCanvas.SetActive(true);
         dialogueText.text = currentQuestion;
-        AdjustDialogueBoxSize();
 
         yield return new WaitForSeconds(4f);
 
@@ -208,14 +206,14 @@ public class NPCController : MonoBehaviour
         string result;
         if (selectedAnswer.Equals(currentAnswer.ToUpper()))
         {
-            result = $"CORRECT! THE ANSWER IS {currentAnswer.ToUpper()}. {currentSolution}";
+            result = $"CORRECT! THE ANSWER IS {currentAnswer.ToUpper()}. \n{currentSolution}";
             PlayCorrectSound();
             totalScore += 2;
             StartCoroutine(ShowCashAnimation());
         }
         else
         {
-            result = $"WRONG! THE CORRECT ANSWER IS {currentAnswer.ToUpper()}. {currentSolution}";
+            result = $"WRONG! THE CORRECT ANSWER IS {currentAnswer.ToUpper()}. \n{currentSolution}";
             PlayWrongSound();
             totalScore -= 1;
         }
@@ -261,7 +259,6 @@ public class NPCController : MonoBehaviour
         dialogueCanvas.transform.position = defaultDialoguePosition.position;
         dialogueCanvas.transform.rotation = defaultDialoguePosition.rotation;
         dialogueText.text = result;
-        AdjustDialogueBoxSize();
         dialogueCanvas.SetActive(true);
         timerText.gameObject.SetActive(false);
 
@@ -285,7 +282,6 @@ public class NPCController : MonoBehaviour
         choicePanel.SetActive(false);
         dialogueCanvas.transform.position = defaultDialoguePosition.position;
         dialogueText.text = $"TIME’S UP!!";
-        AdjustDialogueBoxSize();
         timerText.gameObject.SetActive(false);
 
         totalScore = Mathf.Max(0, totalScore - 1);
@@ -297,22 +293,6 @@ public class NPCController : MonoBehaviour
 
     public void PlayCorrectSound() => correctAnswerAudio?.Play();
     public void PlayWrongSound() => wrongAnswerAudio?.Play();
-
-    void AdjustDialogueBoxSize()
-    {
-        if (dialogueText == null || dialogueCanvas == null) return;
-
-        dialogueText.ForceMeshUpdate();
-        RectTransform canvasRect = dialogueCanvas.GetComponent<RectTransform>();
-
-        Vector2 preferred = dialogueText.GetPreferredValues(dialogueText.text, 600f, Mathf.Infinity);
-        float padding = 40f;
-        float maxWidth = 650f;
-        float newWidth = Mathf.Min(preferred.x + padding, maxWidth);
-        float newHeight = preferred.y + padding;
-
-        canvasRect.sizeDelta = new Vector2(newWidth, newHeight);
-    }
 
     public static void ResetGameData()
     {
