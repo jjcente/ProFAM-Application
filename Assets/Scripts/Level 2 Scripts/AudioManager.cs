@@ -4,7 +4,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance { get; private set; }
 
-    public AudioSource sfxSource; 
+    public AudioSource sfxSource;
 
     public AudioSource musicSource; // drag the music AudioSource here
     public AudioClip backgroundMusic; // assign your music clip
@@ -37,10 +37,10 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-private void Update()
-{
-    if (musicSource != null) musicSource.volume = musicVolume;
-}
+    private void Update()
+    {
+        if (musicSource != null) musicSource.volume = musicVolume;
+    }
 
     public void PlayMusic(AudioClip clip)
     {
@@ -50,9 +50,33 @@ private void Update()
         musicSource.Play();
     }
 
-// Optional: method to stop music
-public void StopMusic()
+    // Optional: method to stop music
+    public void StopMusic()
+    {
+        if (musicSource != null) musicSource.Stop();
+    }
+
+    public void FadeOutMusic(float duration = 1f)
+    {
+        if (musicSource == null || !musicSource.isPlaying)
+            return;
+
+        StartCoroutine(FadeOutMusicCoroutine(duration));
+    }
+
+private System.Collections.IEnumerator FadeOutMusicCoroutine(float duration)
 {
-    if (musicSource != null) musicSource.Stop();
+    float startVolume = musicSource.volume;
+    float time = 0f;
+
+    while (time < duration)
+    {
+        time += Time.deltaTime;
+        musicSource.volume = Mathf.Lerp(startVolume, 0f, time / duration);
+        yield return null;
+    }
+
+    musicSource.Stop();
+    musicSource.volume = startVolume; // reset so next play has normal volume
 }
 }
