@@ -281,8 +281,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Loading...
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 9716828e20029784dbf0e65143a6deee, type: 2}
-  m_sharedMaterial: {fileID: 5444646624945127473, guid: 9716828e20029784dbf0e65143a6deee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fda28f7b2926d7d488c2a0c5572f5c96, type: 2}
+  m_sharedMaterial: {fileID: -8593084822532787257, guid: fda28f7b2926d7d488c2a0c5572f5c96, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -664,8 +664,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Transporting to a new dimension
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 9716828e20029784dbf0e65143a6deee, type: 2}
-  m_sharedMaterial: {fileID: 5444646624945127473, guid: 9716828e20029784dbf0e65143a6deee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fda28f7b2926d7d488c2a0c5572f5c96, type: 2}
+  m_sharedMaterial: {fileID: -8593084822532787257, guid: fda28f7b2926d7d488c2a0c5572f5c96, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -791,6 +791,7 @@ MonoBehaviour:
   portalAnimator: {fileID: 1303337856}
   loadingSound: {fileID: 1157452972}
   fadeDuration: 1
+  dotAnimationSpeed: 0.5
 --- !u!1 &1437514858
 GameObject:
   m_ObjectHideFlags: 0

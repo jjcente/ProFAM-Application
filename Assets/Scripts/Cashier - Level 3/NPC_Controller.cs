@@ -40,36 +40,49 @@ public class NPCController : MonoBehaviour
     public ResultManager resultManager;
     public TextMeshProUGUI scoreDisplay;
 
-    // ✅ Default question set
+    // ✅ Default question set with inline solutions (commas instead of new lines)
     private static readonly List<(string question, string answer, string[] choices, string solution)> defaultQuestions =
         new List<(string, string, string[], string)>
     {
         ("A COFFEE SHOP USES 2.5 KG OF COFFEE BEANS EVERY DAY. BAGS ARE 12 KG EACH. HOW MANY BAGS ARE NEEDED FOR 14 DAYS?",
-         "3 BAGS", new string[]{"3 BAGS", "4 BAGS", "5 BAGS"}, "2.5×14=35 KG, 35/12=2.92≈3 BAGS"),
+         "3 BAGS", new string[]{"3 BAGS", "4 BAGS", "5 BAGS"},
+         "SOLUTION: 2.5 × 14 = 35 kg, 35 ÷ 12 = 2.92 ≈ 3 bags"),
 
         ("A SCHOOL REPLACES 85 BULBS. SINGLE: P150 EACH, OR 12 FOR P585. WHAT IS THE TOTAL MINIMUM COST?",
-         "P4245.00", new string[]{"P4245.00", "P4950.00", "P5010.00"}, "7 BOXES=84 BULBS (7×585=4095), +1 BULB=150 → TOTAL=4245"),
+         "P4245.00", new string[]{"P4245.00", "P4950.00", "P5010.00"},
+         "SOLUTION: 7 boxes = 84 bulbs, 7 × 585 = 4095, +1 bulb = 150, 4095 + 150 = 4245"),
 
         ("2.5 LITERS OF PAINT COVER 20 SQM. HOW MANY LITERS FOR 70 SQM?",
-         "8.75 LITERS", new string[]{"7.5 LITERS", "8.75 LITERS", "10.0 LITERS"}, "70×(2.5/20)=8.75 LITERS"),
+         "8.75 LITERS", new string[]{"7.5 LITERS", "8.75 LITERS", "10.0 LITERS"},
+         "SOLUTION: 70 × (2.5 ÷ 20) = 8.75 liters"),
 
-        ("A SOUVENIR COSTS $150. EXCHANGE RATE: P55=$1. HOW MUCH IN PESOS?",
-         "P8250.00", new string[]{"P8400.00", "P8250.00", "P7950.00"}, "150×55=8250 PESOS"),
+        ("A SOUVENIR COSTS $150. EXCHANGE RATE: P55 = $1. HOW MUCH IN PESOS?",
+         "P8250.00", new string[]{"P8400.00", "P8250.00", "P7950.00"},
+         "SOLUTION: 150 × 55 = 8250 pesos"),
 
         ("200G OF BUTTER MAKES 24 COOKIES. HOW MUCH FOR 60 COOKIES?",
-         "500 G", new string[]{"400 G", "500 G", "600 G"}, "(60/24)×200=500 G"),
+         "500 G", new string[]{"400 G", "500 G", "600 G"},
+         "SOLUTION: (60 ÷ 24) × 200 = 500 g"),
 
         ("A VAN TRAVELS 360 KM USING 45L. WITH 10L LEFT, HOW FAR CAN IT GO?",
-         "80 KM", new string[]{"80 KM", "90 KM", "100 KM"}, "360/45=8 KM/L → 10×8=80 KM"),
+         "80 KM", new string[]{"80 KM", "90 KM", "100 KM"},
+         "SOLUTION: 360 ÷ 45 = 8 km/L, 10 × 8 = 80 km"),
 
         ("A BOX OF 10 PENS COSTS P80. A SINGLE PEN COSTS P10. HOW MUCH IS SAVED PER PEN?",
-         "P2.00", new string[]{"P1.00", "P1.50", "P2.00"}, "10×10=100, 100−80=20, 20/10=2 PER PEN"),
+         "P2.00", new string[]{"P1.00", "P1.50", "P2.00"},
+         "SOLUTION: 10 × 10 = 100, 100 − 80 = 20, 20 ÷ 10 = 2 per pen"),
 
         ("A 500 KM TRIP USES 10L PER 100 KM. FUEL COSTS P50/L. WHAT IS THE TOTAL COST?",
-         "P2500.00", new string[]{"P2000.00", "P2500.00", "P3000.00"}, "500/100=5, 5×10=50L, 50×50=2500 PESOS"),
+         "P2500.00", new string[]{"P2000.00", "P2500.00", "P3000.00"},
+         "SOLUTION: 500 ÷ 100 = 5, 5 × 10 = 50L, 50 × 50 = 2500 pesos"),
 
         ("A MACHINE MAKES 150 ITEMS IN 20 MINUTES. HOW MANY IN 3 HOURS?",
-         "1350 ITEMS", new string[]{"900 ITEMS", "1125 ITEMS", "1350 ITEMS"}, "3H=180MIN, 180/20=9, 150×9=1350 ITEMS")
+         "1350 ITEMS", new string[]{"900 ITEMS", "1125 ITEMS", "1350 ITEMS"},
+         "SOLUTION: 3 hr = 180 min, 180 ÷ 20 = 9, 150 × 9 = 1350 items"),
+
+        ("A SURVEY ESTIMATES THAT 80% ±5% OF CUSTOMERS PREFER COFFEE OVER TEA. IF THERE ARE 200 CUSTOMERS, WHAT IS THE RANGE OF CUSTOMERS THAT MIGHT PREFER COFFEE?",
+         "150 TO 170 CUSTOMERS", new string[]{"150 TO 170 CUSTOMERS", "155 TO 165 CUSTOMERS", "160 TO 180 CUSTOMERS"},
+         "SOLUTION: 80% of 200 = 160, ±5% of 200 = ±10, Range = 150 to 170 customers")
     };
 
     private static List<(string question, string answer, string[] choices, string solution)> questions =
@@ -125,6 +138,7 @@ public class NPCController : MonoBehaviour
         if (questions.Count == 0)
         {
             dialogueText.text = "NO MORE QUESTIONS LEFT!";
+            AdjustDialogueBoxSize();
             yield return new WaitForSeconds(2f);
             interacted = true;
             isInteracting = false;
@@ -140,6 +154,7 @@ public class NPCController : MonoBehaviour
 
         dialogueCanvas.SetActive(true);
         dialogueText.text = currentQuestion;
+        AdjustDialogueBoxSize();
 
         yield return new WaitForSeconds(4f);
 
@@ -193,14 +208,14 @@ public class NPCController : MonoBehaviour
         string result;
         if (selectedAnswer.Equals(currentAnswer.ToUpper()))
         {
-            result = $"CORRECT! THE ANSWER IS {currentAnswer.ToUpper()}.\nSOLUTION: {currentSolution}";
+            result = $"CORRECT! THE ANSWER IS {currentAnswer.ToUpper()}. {currentSolution}";
             PlayCorrectSound();
             totalScore += 2;
             StartCoroutine(ShowCashAnimation());
         }
         else
         {
-            result = $"WRONG! THE CORRECT ANSWER IS {currentAnswer.ToUpper()}.\nSOLUTION: {currentSolution}";
+            result = $"WRONG! THE CORRECT ANSWER IS {currentAnswer.ToUpper()}. {currentSolution}";
             PlayWrongSound();
             totalScore -= 1;
         }
@@ -246,6 +261,7 @@ public class NPCController : MonoBehaviour
         dialogueCanvas.transform.position = defaultDialoguePosition.position;
         dialogueCanvas.transform.rotation = defaultDialoguePosition.rotation;
         dialogueText.text = result;
+        AdjustDialogueBoxSize();
         dialogueCanvas.SetActive(true);
         timerText.gameObject.SetActive(false);
 
@@ -268,7 +284,8 @@ public class NPCController : MonoBehaviour
 
         choicePanel.SetActive(false);
         dialogueCanvas.transform.position = defaultDialoguePosition.position;
-        dialogueText.text = $"TIME’S UP!!\nTHE CORRECT ANSWER IS {currentAnswer.ToUpper()}.\nSOLUTION: {currentSolution}";
+        dialogueText.text = $"TIME’S UP!!";
+        AdjustDialogueBoxSize();
         timerText.gameObject.SetActive(false);
 
         totalScore = Mathf.Max(0, totalScore - 1);
@@ -280,6 +297,22 @@ public class NPCController : MonoBehaviour
 
     public void PlayCorrectSound() => correctAnswerAudio?.Play();
     public void PlayWrongSound() => wrongAnswerAudio?.Play();
+
+    void AdjustDialogueBoxSize()
+    {
+        if (dialogueText == null || dialogueCanvas == null) return;
+
+        dialogueText.ForceMeshUpdate();
+        RectTransform canvasRect = dialogueCanvas.GetComponent<RectTransform>();
+
+        Vector2 preferred = dialogueText.GetPreferredValues(dialogueText.text, 600f, Mathf.Infinity);
+        float padding = 40f;
+        float maxWidth = 650f;
+        float newWidth = Mathf.Min(preferred.x + padding, maxWidth);
+        float newHeight = preferred.y + padding;
+
+        canvasRect.sizeDelta = new Vector2(newWidth, newHeight);
+    }
 
     public static void ResetGameData()
     {
