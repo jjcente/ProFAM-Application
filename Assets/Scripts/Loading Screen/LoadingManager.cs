@@ -17,9 +17,14 @@ public class LoadingScreenManager : MonoBehaviour
 
     [Header("Fade Settings")]
     public float fadeDuration = 1.5f;
+    public float dotAnimationSpeed = 0.5f;     // Speed for the loading dots
+
+    private bool isAnimatingDots = true;
 
     private void Start()
     {
+        // Start both loading animation and scene transition
+        StartCoroutine(AnimateLoadingDots());
         StartCoroutine(HandleLoadingSequence());
     }
 
@@ -70,11 +75,14 @@ public class LoadingScreenManager : MonoBehaviour
         // Wait for sound or a short default delay
         float waitTime = (loadingSound != null && loadingSound.clip != null)
             ? loadingSound.clip.length
-            : 2f;
+            : 3f;
         yield return new WaitForSeconds(waitTime);
 
         // Fade Out before switching scenes
         yield return StartCoroutine(FadeCanvasGroup(portalCanvasGroup, 1f, 0f, fadeDuration));
+
+        // Stop loading text animation
+        isAnimatingDots = false;
 
         // ✅ Load the next scene safely
         if (nextSceneIndex >= 0 && nextSceneIndex < SceneManager.sceneCountInBuildSettings)
@@ -116,5 +124,21 @@ public class LoadingScreenManager : MonoBehaviour
                 return true;
         }
         return false;
+    }
+
+    // ✅ Animated "Loading..." text
+    private IEnumerator AnimateLoadingDots()
+    {
+        if (loadingText == null)
+            yield break;
+
+        int dotCount = 0;
+
+        while (isAnimatingDots)
+        {
+            dotCount = (dotCount + 1) % 4; // 0 to 3 dots
+            loadingText.text = "Loading" + new string('.', dotCount);
+            yield return new WaitForSeconds(dotAnimationSpeed);
+        }
     }
 }
