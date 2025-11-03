@@ -107,7 +107,7 @@ public class BombManager : MonoBehaviour
     {
         Debug.Log($"💥 Bomb exploded: {b.name}");
 
-        bombs.Remove(b);
+        //bombs.Remove(b);
 
         Debug.Log("💀 A bomb exploded! Mission failed!");
 
