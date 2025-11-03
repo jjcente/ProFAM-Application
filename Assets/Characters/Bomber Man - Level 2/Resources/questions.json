@@ -1,32 +1,32 @@
 [
   {
-    "question": "What is 9 + 13?",
-    "answers": ["22", "21", "20", "23"],
-    "correctIndex": 0,
-    "solution": "9 + 13 = 22"
-  },
-  {
-    "question": "What is 15 * 3?",
-    "answers": ["45", "30", "50", "40"],
-    "correctIndex": 0,
-    "solution": "15 * 3 = 45"
-  },
-  {
-    "question": "What is 81 ÷ 9?",
-    "answers": ["7", "8", "9", "10"],
+    "question": "A circular swimming pool has a diameter of 10 meters. A safety fence needs to be built around the pool, leaving a 1 meter walkway between the pool edge and the fence. What is the minimum length of fencing required (use π≈3.14)?",
+    "answers": ["31.4 meters", "34.56 meters", "37.68 meters", "40.12 meters"],
     "correctIndex": 2,
-    "solution": "81 ÷ 9 = 9"
+    "solution": "The radius of the fence circle is 10/2 + 1 = 6 m. C = 2πr = 2 × 3.14 × 6 = 37.68 meters."
   },
   {
-    "question": "Solve for x: 2x + 5 = 15",
-    "answers": ["4", "5", "6", "7"],
-    "correctIndex": 0,
-    "solution": "2x + 5 = 15 → 2x = 10 → x = 5"
-  },
-  {
-    "question": "What is the square of 12?",
-    "answers": ["124", "144", "121", "132"],
+    "question": "A landscaper is designing a rectangular garden that is 15 meters long and 8 meters wide. He plans to cover the entire area with fertilizer that costs ₱50 per square meter. What is the total cost of the fertilizer needed for the garden?",
+    "answers": ["₱1,200", "₱6,000", "₱7,500", "₱8,000"],
     "correctIndex": 1,
-    "solution": "12² = 144"
+    "solution": "Area = 15 × 8 = 120 sq.m; Cost = 120 × ₱50 = ₱6,000."
+  },
+  {
+    "question": "A map uses a scale where 2 centimeters represents 5 kilometers in reality. Two cities are measured to be 15 centimeters apart on the map. What is the actual distance between the two cities in kilometers?",
+    "answers": ["30.5 km", "37.5 km", "45.5 km", "50.5 km"],
+    "correctIndex": 1,
+    "solution": "Scale factor = 5 km / 2 cm = 2.5 km/cm; Actual distance = 15 × 2.5 = 37.5 km."
+  },
+  {
+    "question": "A construction company pours concrete into a cube-shaped mold. The interior edge length of the mold is 0.5 meters. How many cubic meters (m³) of concrete are needed to fill the mold completely?",
+    "answers": ["0.125 m³", "0.25 m³", "1.25 m³", "2.5 m³"],
+    "correctIndex": 0,
+    "solution": "V = s³ = (0.5)³ = 0.125 m³."
+  },
+  {
+    "question": "A farmer owns a triangular field with a base of 200 meters and a perpendicular height of 150 meters. The farmer is paid ₱10 for every 100 square meters of field area. How much money does the farmer earn from the field?",
+    "answers": ["₱1,500", "₱3,000", "₱15,000", "₱30,000"],
+    "correctIndex": 0,
+    "solution": "Area = ½ × 200 × 150 = 15,000 sq.m; Units = 15,000 ÷ 100 = 150; Earnings = 150 × ₱10 = ₱1,500."
   }
 ]

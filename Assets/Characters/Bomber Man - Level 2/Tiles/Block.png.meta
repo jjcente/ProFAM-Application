@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 91918dd9144412a6dae825a024c14564
+guid: 6647700bfb0caaee984d6f530a66af3f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4367764165856708723
-    second: bomb_defuse_0
+      213: 2537882373423050008
+    second: Block_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,23 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: bomb_defuse_0
+      name: Block_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 3
-        width: 481
-        height: 495
+        x: 0
+        y: 0
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 3f4e12347c74d360499c89c1187eb0ef
-      internalID: 4367764165856708723
+      spriteID: 81d2b95829e583320800000000000000
+      internalID: 2537882373423050008
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 37fc7cbefc841f3cb87b0e3b5bce7c5b
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -159,13 +159,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceOnImport
-        value: True
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":true,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      bomb_defuse_0: 4367764165856708723
+      Block_0: 2537882373423050008
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

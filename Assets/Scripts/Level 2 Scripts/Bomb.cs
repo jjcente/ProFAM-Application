@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
+
+    public enum BombState { Active, Defused, Exploded }
+    public BombState State { get; private set; } = BombState.Active;
     public float localFuse = 999f; // not used for shared timer - kept for animation timing
     public GameObject explosionPrefab; 
     public Sprite defusedSprite;
@@ -22,27 +25,31 @@ public class Bomb : MonoBehaviour
     }
 
 public void Defuse()
-    {
-    AudioManager.Instance.PlaySFX(defuseClip);
+{
     if (isDefused) return;
     isDefused = true;
+    State = BombState.Defused;
+
+    AudioManager.Instance.PlaySFX(defuseClip);
 
     var anim = GetComponent<Animation>();
     if (anim) anim.Stop();
 
-    // Optional: make it look "inactive" (e.g. darken it)
     var sr = GetComponent<SpriteRenderer>();
     if (sr) sr.color = Color.gray;
 
-    // Notify manager
-    BombManager.Instance?.OnBombDefused(this);
+    if (col != null) col.enabled = false; // make un-interactable
 
+    BombManager.Instance?.OnBombDefused(this);
 }
 
 
 public void Explode()
 {
-    if (isDefused) return;
+    if (isDefused || State == BombState.Exploded) return;
+
+    
+    State = BombState.Exploded;
 
     int explosionRange = 5; // how far the explosion travels in tiles
     Vector2[] directions = { Vector2.up, Vector2.down, Vector2.left, Vector2.right };

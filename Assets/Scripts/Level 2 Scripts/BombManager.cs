@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 using TMPro;
 
 public class BombManager : MonoBehaviour
@@ -21,6 +22,14 @@ public class BombManager : MonoBehaviour
     private List<Bomb> bombs = new List<Bomb>();
     private int defused = 0;
     private bool levelOver = false;
+
+    [Header("Win / Portal")]
+    public GameObject portalPrefab;
+    public Transform portalSpawnPoint;
+    public float timeBeforePlayerMoves = 1f;
+    public float playerMoveDuration = 1.2f;
+    public string nextSceneName = "Level3";
+    public AudioClip winClip;
 
     private void Awake()
     {
@@ -49,14 +58,14 @@ public class BombManager : MonoBehaviour
     }
 
     void UpdateTimerUI()
-{
-    if (!sharedTimerText) return;
+    {
+        if (!sharedTimerText) return;
 
-    int minutes = Mathf.FloorToInt(timer / 60f);
-    int seconds = Mathf.FloorToInt(timer % 60f);
+        int minutes = Mathf.FloorToInt(timer / 60f);
+        int seconds = Mathf.FloorToInt(timer % 60f);
 
-    sharedTimerText.text = string.Format("{0}:{1:00}", minutes, seconds);
-}
+        sharedTimerText.text = string.Format("{0}:{1:00}", minutes, seconds);
+    }
 
     void SpawnBombs()
     {
@@ -102,32 +111,75 @@ public class BombManager : MonoBehaviour
 
     }
 
-void OnTimerExpired()
+    void OnTimerExpired()
+    {
+        Debug.Log("⏰ Time expired! Restarting full round...");
+
+        foreach (var b in bombs.ToArray())
+            b.Explode();
+
+        // Reset timer
+        timer = sharedTime;
+        levelOver = false;
+
+        // Respawn player and bombs
+        var player = FindFirstObjectByType<PlayerMovementController>();
+        if (player != null)
+            player.Respawn();
+
+        ResetLevel();
+    }
+
+
+
+
+void OnAllBombsDefused()
 {
-    Debug.Log("⏰ Time expired! Restarting full round...");
+    Debug.Log("🎉 All bombs defused! Level success.");
+    levelOver = true;
 
-    foreach (var b in bombs.ToArray())
-        b.Explode();
+    // Fade out background music
+    if (AudioManager.Instance != null)
+        AudioManager.Instance.FadeOutMusic(1.5f);
 
-    // Reset timer
-    timer = sharedTime;
-    levelOver = false;
+    // Play win sound
+    if (winClip != null)
+        AudioManager.Instance.PlaySFX(winClip);
 
-    // Respawn player and bombs
+    // Begin win sequence
     var player = FindFirstObjectByType<PlayerMovementController>();
     if (player != null)
-        player.Respawn();
+    {
+        StartCoroutine(HandlePlayerWinSequence(player));
+    }
+    else
+    {
+        Debug.LogWarning("Player not found! Can't run win sequence.");
+    }
+}
 
-    ResetLevelWithoutTimer();
+IEnumerator HandlePlayerWinSequence(PlayerMovementController player)
+{
+    yield return new WaitForSeconds(timeBeforePlayerMoves);
+
+    player.transform.position = player.spawnPoint.position;
+
+    Vector3 exitPos = player.spawnPoint.position + Vector3.right * 3f;
+
+    GameObject fakePortal = new GameObject("FakePortal");
+    fakePortal.transform.position = exitPos;
+
+    player.ForceFaceDirection(Vector2.right);
+
+    yield return player.StartCoroutine(player.MoveToPortalAndWin(
+        fakePortal.transform, playerMoveDuration));
+
+    yield return new WaitForSeconds(0.5f);
+    Debug.Log("➡️ Loading next level...");
+   // SceneManager.LoadScene(nextSceneName);
 }
 
 
-
-
-    void OnAllBombsDefused()
-    {
-        Debug.Log("All bombs defused! Level success.");
-    }
 
     public bool IsTimerRunning()
     {
@@ -136,7 +188,48 @@ void OnTimerExpired()
 
 public void ResetLevelWithoutTimer()
 {
-    Debug.Log("🔄 Soft resetting level (timer unaffected)");
+    Debug.Log("Partial Reset (player death)");
+
+    List<Bomb> newBombList = new List<Bomb>();
+
+    foreach (var b in bombs.ToArray())
+    {
+        if (b == null) continue;
+
+        switch (b.State)
+        {
+            case Bomb.BombState.Defused:
+                // Keep defused bomb as-is (disabled, gray, no collider)
+                newBombList.Add(b);
+                break;
+
+            case Bomb.BombState.Active:
+                // Keep active bomb (player didn’t interact with it yet)
+                newBombList.Add(b);
+                break;
+
+            case Bomb.BombState.Exploded:
+                // Destroy and respawn exploded bomb
+                Destroy(b.gameObject);
+                Vector3 pos = GetRandomSpawnPosition();
+                var newBomb = Instantiate(bombPrefab, pos, Quaternion.identity).GetComponent<Bomb>();
+                newBombList.Add(newBomb);
+                break;
+        }
+    }
+
+    bombs = newBombList;
+
+    levelOver = false;
+    QuestionDatabase.Instance.ResetQuestions();
+
+    Debug.Log($"After death: {bombs.Count} total bombs (Defused remain, Exploded respawned)");
+}
+
+
+public void ResetLevel()
+{
+    Debug.Log("Hard Reset");
 
     // Clear existing bombs
     foreach (var b in bombs.ToArray())
