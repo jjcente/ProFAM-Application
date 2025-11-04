@@ -1,0 +1,8 @@
+[
+  {
+    "question": "What is a fish?",
+    "multipleAnswer": ["A mammal", "A reptile", "A fish", "A bird"],
+    "correctIndex": 2,
+    "solution": "A fish is an aquatic animal with gills."
+  }
+]

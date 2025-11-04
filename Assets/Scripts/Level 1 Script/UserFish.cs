@@ -1,0 +1,82 @@
+using UnityEngine;
+using UnityEngine.EventSystems; // <-- needed for IsPointerOverGameObject
+
+public class PlayerDragController : MonoBehaviour
+{
+    public float moveSpeed = 10f;
+    private Vector3 targetPosition;
+    private PlayerGrowth playerGrowth;
+
+
+    void Start()
+    {
+        targetPosition = transform.position; // initialize
+
+            playerGrowth = GetComponent<PlayerGrowth>();
+
+    }
+
+    void Update()
+    {
+        if (FishQuestionManager.IsQuestionActive)
+            return;
+        
+        HandleInput();    // <--- call it here
+        MovePlayer();
+        FlipSprite();
+    }
+
+    // <--- PUT THE METHOD HERE
+    private void HandleInput()
+    {
+        if (EventSystem.current == null)
+            return; // avoid null reference if EventSystem is missing
+
+        // Editor: mouse input
+        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            Vector3 mousePos = Input.mousePosition;
+            mousePos.z = 0f;
+            targetPosition = Camera.main.ScreenToWorldPoint(mousePos);
+            targetPosition.z = 0f;
+        }
+
+        // Mobile: touch input
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (!EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+            {
+                Vector3 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
+                touchPos.z = 0f;
+                targetPosition = touchPos;
+            }
+        }
+    }
+
+    private void MovePlayer()
+    {
+        transform.position = Vector3.Lerp(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+    }
+
+  private void FlipSprite()
+{
+    if (playerGrowth == null)
+        return;
+
+    // Get direction: 1 = right, -1 = left
+    float direction = (targetPosition.x > transform.position.x) ? 1f : -1f;
+
+    // Flip using PlayerGrowth so it keeps its current size
+    playerGrowth.FlipDirection(direction);
+}
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        FishQuestionHolder smallFish = collision.GetComponent<FishQuestionHolder>();
+        if (smallFish != null)
+        {
+         FishQuestionManager.Instance.ShowQuestion(smallFish.question, smallFish);
+        }
+    }
+}
