@@ -1,63 +1,101 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class FishSpawner : MonoBehaviour
 {
-    public GameObject[] fishPrefabs; // All small fish prefabs
-    public Transform[] spawnPoints;   // Optional spawn points
-    public int fishCount = 10;       // Number of fish to spawn
+    [Header("Fish Setup")]
+    public GameObject[] fishPrefabs;           // All small fish prefabs
+    public Transform[] spawnPoints;            // Optional spawn points
+    public int initialFishCount = 10;          // Initial fish count
 
-    void Start()
+    [Header("Dynamic Spawning")]
+    public int respawnThreshold = 3;           // When fish count <= this, respawn
+    public Vector2Int respawnBatchRange = new Vector2Int(5, 8); // Spawn between 5–8
+    public float checkInterval = 2f;           // How often to check fish count
+
+    private FishQuestionDatabase db;
+    private readonly List<GameObject> activeFish = new();
+
+    private void Start()
     {
-        // Ensure FishQuestionManager exists
+        // Check for manager and database
         if (FishQuestionManager.Instance == null)
         {
             Debug.LogError("FishQuestionManager instance not found!");
             return;
         }
 
-        var db = FishQuestionManager.Instance.questionDatabase;
-
-        // Ensure database exists
+        db = FishQuestionManager.Instance.questionDatabase;
         if (db == null)
         {
             Debug.LogError("FishQuestionDatabase not assigned in FishQuestionManager!");
             return;
         }
 
-        // Load hardcoded questions
         db.LoadQuestions();
 
-        // Spawn fishes
-        SpawnFishes(db);
+        // Spawn initial batch
+        SpawnBatch(initialFishCount);
+
+        // Start checking fish count
+        StartCoroutine(CheckFishCountRoutine());
     }
 
-    void SpawnFishes(FishQuestionDatabase db)
+    private IEnumerator CheckFishCountRoutine()
     {
-        for (int i = 0; i < fishCount; i++)
+        while (true)
         {
-            // Pick a random fish prefab
-            GameObject prefab = fishPrefabs[Random.Range(0, fishPrefabs.Length)];
+            yield return new WaitForSeconds(checkInterval);
 
-            // Determine position
-            Vector3 pos;
-            if (spawnPoints != null && spawnPoints.Length > 0)
-                pos = spawnPoints[Random.Range(0, spawnPoints.Length)].position;
-            else
-                pos = new Vector3(Random.Range(-8f, 8f), Random.Range(-4f, 4f), 0);
+            // Clean up destroyed fish
+            activeFish.RemoveAll(f => f == null);
 
-            // Instantiate fish
-            GameObject fish = Instantiate(prefab, pos, Quaternion.identity);
-
-            // Assign a random question
-            FishQuestionHolder holder = fish.GetComponent<FishQuestionHolder>();
-            if (holder != null)
+            if (activeFish.Count <= respawnThreshold)
             {
-                // Always get a valid question
-                if (db.AllQuestionsUsed())
-                    db.ResetQuestions();
-
-                holder.question = db.GetRandomQuestion();
+                int spawnCount = Random.Range(respawnBatchRange.x, respawnBatchRange.y + 1);
+                SpawnBatch(spawnCount);
+                Debug.Log($"🐠 Spawned new batch ({spawnCount}) because only {activeFish.Count} left.");
             }
         }
     }
+
+private void SpawnBatch(int count)
+{
+    // Determine how many questions are available
+    int availableQuestions = db.QuestionsRemaining(); // we’ll add this function
+    if (availableQuestions <= 0)
+    {
+        Debug.Log("No questions remaining — skipping fish spawn.");
+        return;
+    }
+
+    // Limit spawn count to available questions
+    count = Mathf.Min(count, availableQuestions);
+
+    for (int i = 0; i < count; i++)
+    {
+        GameObject prefab = fishPrefabs[Random.Range(0, fishPrefabs.Length)];
+        Vector3 pos = (spawnPoints != null && spawnPoints.Length > 0)
+            ? spawnPoints[Random.Range(0, spawnPoints.Length)].position
+            : new Vector3(Random.Range(-8f, 8f), Random.Range(-4f, 4f), 0);
+
+        GameObject fish = Instantiate(prefab, pos, Quaternion.identity);
+        activeFish.Add(fish);
+
+        FishQuestionHolder holder = fish.GetComponent<FishQuestionHolder>();
+        if (holder != null)
+        {
+            FishQuestion q = db.GetRandomQuestion();
+            if (q == null)
+            {
+                Debug.LogWarning("No available questions — skipping assignment.");
+                continue;
+            }
+
+            holder.question = q;
+        }
+    }
+}
+
 }

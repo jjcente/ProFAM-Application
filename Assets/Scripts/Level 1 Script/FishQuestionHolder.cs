@@ -1,13 +1,14 @@
 using UnityEngine;
+using System;
 
 public class FishQuestionHolder : MonoBehaviour
 {
-
-     public float pointValue = 1f;
     public FishQuestion question;
+    public float pointValue = 1f;
+    public event Action<FishQuestionHolder> OnFishDestroyed;
 
-      public void IncreaseValue()
+    private void OnDestroy()
     {
-        pointValue += 0.5f;
+        OnFishDestroyed?.Invoke(this);
     }
 }

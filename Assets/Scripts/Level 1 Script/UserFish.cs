@@ -1,11 +1,15 @@
 using UnityEngine;
 using UnityEngine.EventSystems; // <-- needed for IsPointerOverGameObject
+using System.Collections;
 
 public class PlayerDragController : MonoBehaviour
 {
     public float moveSpeed = 10f;
     private Vector3 targetPosition;
     private PlayerGrowth playerGrowth;
+
+    private bool canOpenQuestion = true;   // cooldown control
+    public float questionCooldown = 2f;  
 
 
     void Start()
@@ -18,7 +22,7 @@ public class PlayerDragController : MonoBehaviour
 
     void Update()
     {
-        if (FishQuestionManager.IsQuestionActive)
+    if (FishQuestionManager.IsQuestionActive || FeaturePanelManager.IsFeatureActive)
             return;
         
         HandleInput();    // <--- call it here
@@ -71,12 +75,24 @@ public class PlayerDragController : MonoBehaviour
     playerGrowth.FlipDirection(direction);
 }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+       private void OnTriggerEnter2D(Collider2D collision)
     {
+        FishAudioManager.Instance.PlayPlayerBite();
+    if (!canOpenQuestion || FishQuestionManager.IsQuestionActive || FeaturePanelManager.IsFeatureActive)
+            return; // prevent re-trigger spam
+
         FishQuestionHolder smallFish = collision.GetComponent<FishQuestionHolder>();
         if (smallFish != null)
         {
-         FishQuestionManager.Instance.ShowQuestion(smallFish.question, smallFish);
+            FishQuestionManager.Instance.ShowQuestion(smallFish.question, smallFish);
+            StartCoroutine(QuestionCooldown());
         }
+    }
+    
+       private IEnumerator QuestionCooldown()
+    {
+        canOpenQuestion = false;
+        yield return new WaitForSeconds(questionCooldown);
+        canOpenQuestion = true;
     }
 }

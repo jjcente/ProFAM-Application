@@ -1,32 +1,98 @@
 [
   {
-    "question": "A circular swimming pool has a diameter of 10 meters. A safety fence needs to be built around the pool, leaving a 1 meter walkway between the pool edge and the fence. What is the minimum length of fencing required (use π≈3.14)?",
-    "answers": ["31.4 meters", "34.56 meters", "37.68 meters", "40.12 meters"],
+    "question": "A circular swimming pool has a diameter of 10 meters. A safety fence needs to be built around the pool, leaving a 1 meter walkway between the pool edge and the fence. What is the minimum length of fencing required (use π ≈ 3.14)?",
+    "answers": ["31.40 meters", "34.54 meters", "37.68 meters", "43.96 meters"],
     "correctIndex": 2,
-    "solution": "The radius of the fence circle is 10/2 + 1 = 6 m. C = 2πr = 2 × 3.14 × 6 = 37.68 meters."
+    "solution": "Radius of pool: 10/2 = 5 m. Radius to fence: 5 + 1 = 6 m. Circumference = 2πr = 2 x 3.14 x 6 = 37.68 m."
   },
   {
     "question": "A landscaper is designing a rectangular garden that is 15 meters long and 8 meters wide. He plans to cover the entire area with fertilizer that costs ₱50 per square meter. What is the total cost of the fertilizer needed for the garden?",
     "answers": ["₱1,200", "₱6,000", "₱7,500", "₱8,000"],
     "correctIndex": 1,
-    "solution": "Area = 15 × 8 = 120 sq.m; Cost = 120 × ₱50 = ₱6,000."
+    "solution": "Area = 15 x 8 = 120 sq m; Total cost = 120 x 50 = ₱6,000."
   },
   {
     "question": "A map uses a scale where 2 centimeters represents 5 kilometers in reality. Two cities are measured to be 15 centimeters apart on the map. What is the actual distance between the two cities in kilometers?",
     "answers": ["30.5 km", "37.5 km", "45.5 km", "50.5 km"],
     "correctIndex": 1,
-    "solution": "Scale factor = 5 km / 2 cm = 2.5 km/cm; Actual distance = 15 × 2.5 = 37.5 km."
+    "solution": "Scale factor = 5/2 = 2.5 km/cm; Actual distance = 15 x 2.5 = 37.5 km."
   },
   {
     "question": "A construction company pours concrete into a cube-shaped mold. The interior edge length of the mold is 0.5 meters. How many cubic meters (m³) of concrete are needed to fill the mold completely?",
     "answers": ["0.125 m³", "0.25 m³", "1.25 m³", "2.5 m³"],
     "correctIndex": 0,
-    "solution": "V = s³ = (0.5)³ = 0.125 m³."
+    "solution": "Volume = s³ = 0.5³ = 0.125 m³."
   },
   {
     "question": "A farmer owns a triangular field with a base of 200 meters and a perpendicular height of 150 meters. The farmer is paid ₱10 for every 100 square meters of field area. How much money does the farmer earn from the field?",
     "answers": ["₱1,500", "₱3,000", "₱15,000", "₱30,000"],
     "correctIndex": 0,
-    "solution": "Area = ½ × 200 × 150 = 15,000 sq.m; Units = 15,000 ÷ 100 = 150; Earnings = 150 × ₱10 = ₱1,500."
+    "solution": "Area = 1/2 x 200 x 150 = 15,000 sq m; Units = 150; Earnings = 150 x ₱10 = ₱1,500."
+  },
+  {
+    "question": "A playground is shaped as a rectangle 18 m by 10 m with a semicircular extension attached to one 10 m side (diameter = 10 m). What is the playground’s area? (Use π ≈ 3.1416)",
+    "answers": ["223 m²", "219 m²", "221 m²", "218 m²"],
+    "correctIndex": 1,
+    "solution": "Rectangle area = 18 x 10 = 180 m²; Semicircle area = 0.5 x π x 5² = 39.27 m²; Total area ≈ 219 m²."
+  },
+  {
+    "question": "A building casts a shadow 12 m long. A statue 2.5 m tall nearby casts a shadow 3 m long. How tall is the building?",
+    "answers": ["9 m", "10 m", "12 m", "15 m"],
+    "correctIndex": 1,
+    "solution": "Height/Shadow = Statue Height/Shadow; H/12 = 2.5/3; H = 10 m."
+  },
+  {
+    "question": "A map shows a straight road that measures 4.3 cm. The map scale is 1 : 50,000 (1 cm on map = 50,000 cm in reality). What is the real length of the road in kilometres, to two decimal places?",
+    "answers": ["2.05 km", "2.15 km", "21.50 km", "0.215 km"],
+    "correctIndex": 1,
+    "solution": "Real length = 4.3 x 50,000 cm = 215,000 cm = 2.15 km."
+  },
+  {
+    "question": "A painter needs to cover a rectangular wall section that is 5 meters wide and 3 meters high. He has enough paint to cover 10 square meters. What fraction of the wall can the painter cover with the paint he has?",
+    "answers": ["1/2", "2/3", "3/4", "4/5"],
+    "correctIndex": 1,
+    "solution": "Wall area = 5 x 3 = 15 m²; Fraction = 10/15 = 2/3."
+  },
+  {
+    "question": "A store sells drinks in two sizes of cylindrical cans. Can A has a radius of 3 cm and a height of 10 cm. Can B has a radius of 4 cm and a height of 5 cm. Which can has a greater volume and by how much?",
+    "answers": ["Can A, by 5π cm³", "Can A, by 10π cm³", "Can B, by 5π cm³", "Can B, by 10π cm³"],
+    "correctIndex": 1,
+    "solution": "VA = π x 3² x 10 = 90π; VB = π x 4² x 5 = 80π; Difference = 10π; Can A is greater."
+  },
+  {
+    "question": "A greenhouse is shaped like a rectangular prism with dimensions 8 m by 5 m by 3 m. To regulate humidity, it must contain at least 100 cubic meters of air. Does the greenhouse meet the minimum air volume requirement?",
+    "answers": ["Yes, by 20 m³", "Yes, by 40 m³", "No, it is 20 m³ short", "No, it is 40 m³ short"],
+    "correctIndex": 0,
+    "solution": "Volume = 8 x 5 x 3 = 120 m³; 120 > 100, difference = 20 m³."
+  },
+  {
+    "question": "A bicycle tire has a radius of 30 centimeters. How many times will the wheel rotate to travel a distance of 18.84 meters? (Use π ≈ 3.14)",
+    "answers": ["5 rotations", "10 rotations", "15 rotations", "20 rotations"],
+    "correctIndex": 1,
+    "solution": "Circumference = 2 x π x 0.3 = 1.884 m; Rotations = 18.84 / 1.884 = 10."
+  },
+  {
+    "question": "A flagpole casts a 12 meter shadow. At the same time, a person 1.8 meters tall standing nearby casts a 3 meter shadow. What is the height of the flagpole?",
+    "answers": ["4.8 m", "6.0 m", "7.2 m", "8.0 m"],
+    "correctIndex": 2,
+    "solution": "Height ratio: H/12 = 1.8/3; H = 7.2 m."
+  },
+  {
+    "question": "A rectangular billboard is 3 meters high and 4 meters wide. A support wire runs diagonally from the top corner to the bottom opposite corner. What is the minimum length of the support wire?",
+    "answers": ["5 m", "5.5 m", "6.0 m", "7 m"],
+    "correctIndex": 0,
+    "solution": "Diagonal = √(3² + 4²) = √25 = 5 m."
+  },
+  {
+    "question": "A security camera is mounted on a wall. It has a total viewing angle of 110°. A new barrier is placed, which covers the first 25° of the camera's view on the left side. What is the remaining total viewing angle of the camera?",
+    "answers": ["85°", "95°", "105°", "110°"],
+    "correctIndex": 0,
+    "solution": "Remaining angle = 110° - 25° = 85°."
+  },
+  {
+    "question": "A student took four quizzes and received scores of 80, 85, 90, and 75. What score must the student get on a fifth quiz to achieve an average (mean) score of exactly 85 across all five quizzes?",
+    "answers": ["90", "95", "100", "105"],
+    "correctIndex": 1,
+    "solution": "Required total = 85 x 5 = 425; Current total = 80+85+90+75=330; Needed = 425-330 = 95."
   }
 ]

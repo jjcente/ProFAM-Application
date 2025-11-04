@@ -23,7 +23,11 @@ public class FishQuestionManager : MonoBehaviour
 
     public static bool IsQuestionActive { get; private set; } = false;
     
+
     private FishQuestionHolder currentFish; 
+    
+    public static event System.Action<FishQuestion> OnQuestionAnswered;
+
 
     private void Awake()
     {
@@ -115,30 +119,34 @@ private void OnAnswerSelected(int selectedIndex)
     PlayerGrowth playerGrowth = FindFirstObjectByType<PlayerGrowth>();
 
 
-    // Destroy the fish only if the answer is correct
-    if (selectedIndex == currentQuestion.correctIndex)
-    {
-        // Correct answer → grow
-        if (playerGrowth != null)
-            playerGrowth.GrowBy(currentFish.pointValue);
-
-        // Destroy the fish
-        if (currentFish != null)
-            Destroy(currentFish.gameObject);
-    }
-    else
+        // Destroy the fish only if the answer is correct
+        if (selectedIndex == currentQuestion.correctIndex)
         {
-        
-          if (currentFish != null)
-            currentFish.IncreaseValue();
+            // Correct answer → grow
+            if (playerGrowth != null)
+                playerGrowth.GrowBy(currentFish.pointValue);
+                 FishAudioManager.Instance.PlayPlayerBite();
+
+            questionDatabase.MarkQuestionAsAnswered(currentQuestion);
+            OnQuestionAnswered?.Invoke(currentQuestion);
+
+            // Destroy the fish
+            if (currentFish != null)
+                Destroy(currentFish.gameObject);
+        }
+        else
+        {
+
             // Wrong answer → shrink
             if (playerGrowth != null)
                 playerGrowth.Shrink();
 
-        // Fish stays alive
-    }
+            // Fish stays alive
+        }
+    questionDatabase.MarkQuestionAsAnswered(currentQuestion);
+    OnQuestionAnswered?.Invoke(currentQuestion);
 
-    StartCoroutine(HidePanelAfterDelay(2f));
+    StartCoroutine(HidePanelAfterDelay(3f));
 }
     private IEnumerator HidePanelAfterDelay(float delay)
     {
