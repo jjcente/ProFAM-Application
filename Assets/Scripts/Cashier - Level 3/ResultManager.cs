@@ -43,7 +43,7 @@ public class ResultManager : MonoBehaviour
         // Show both scores with an 8-bit style animation
         StartCoroutine(ShowScoreTransition(finalScore));
 
-        // ✅ Continue button: restart game
+        // ✅ Continue button: restart current game
         if (continueButton != null)
         {
             continueButton.onClick.RemoveAllListeners();
@@ -54,14 +54,14 @@ public class ResultManager : MonoBehaviour
             });
         }
 
-        // ✅ Exit button: go to Main Menu (scene index 0)
+        // ✅ Exit button: reset all level data (except main menu & loading), then go to main menu
         if (exitButton != null)
         {
             exitButton.onClick.RemoveAllListeners();
             exitButton.onClick.AddListener(() =>
             {
-                ResetGameData();
-                SceneManager.LoadScene(0); // ← main menu scene
+                ResetAllExceptMenuAndLoading();
+                SceneManager.LoadScene(0); // Go back to main menu
             });
         }
     }
@@ -93,9 +93,28 @@ public class ResultManager : MonoBehaviour
         }
     }
 
-    // ✅ Reset game data but keep high score
+    // ✅ Reset current game data but keep high score
     void ResetGameData()
     {
+        NPCController.ResetGameData();
+    }
+
+    // ✅ Reset all level data except main menu (0) and loading screen (1)
+    void ResetAllExceptMenuAndLoading()
+    {
+        int totalScenes = SceneManager.sceneCountInBuildSettings;
+
+        for (int i = 2; i < totalScenes; i++) // start from index 2 onwards
+        {
+            string key = "LevelData_" + i;
+            if (PlayerPrefs.HasKey(key))
+            {
+                PlayerPrefs.DeleteKey(key);
+                Debug.Log("Reset data for Level (Scene Index): " + i);
+            }
+        }
+
+        PlayerPrefs.Save();
         NPCController.ResetGameData();
     }
 }

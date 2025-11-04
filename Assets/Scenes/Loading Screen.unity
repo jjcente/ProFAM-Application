@@ -662,7 +662,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Transporting to a new dimension
+  m_text: Teleporting to a new dimension
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fda28f7b2926d7d488c2a0c5572f5c96, type: 2}
   m_sharedMaterial: {fileID: -8593084822532787257, guid: fda28f7b2926d7d488c2a0c5572f5c96, type: 2}

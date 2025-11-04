@@ -129,10 +129,10 @@ TextureImporter:
       name: bomb_defuse_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 3
-        width: 481
-        height: 495
+        x: 90
+        y: 69
+        width: 298
+        height: 377
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,7 +141,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 85ab74b0c4dc05f90a2d647b323ce310
+      spriteID: ae8a7418a94adbb459ab1c93f7761841
       internalID: 4367764165856708723
       vertices: []
       indices: 

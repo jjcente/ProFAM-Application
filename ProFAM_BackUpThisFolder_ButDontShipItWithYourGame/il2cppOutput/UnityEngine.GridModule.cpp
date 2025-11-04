@@ -73,6 +73,9 @@ struct Behaviour_t01970CFBBA658497AE30F311C447DB0440BAB7FA  : public Component_t
 struct GridLayout_tAD661B1E1E57C16BE21C8C13432EA04FE1F0418B  : public Behaviour_t01970CFBBA658497AE30F311C447DB0440BAB7FA
 {
 };
+struct Grid_t4C0ACF986206D18240E35155E01B5A97DAA651FE  : public GridLayout_tAD661B1E1E57C16BE21C8C13432EA04FE1F0418B
+{
+};
 struct IntPtr_t_StaticFields
 {
 	intptr_t ___Zero;
@@ -122,7 +125,15 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Behaviour__ctor_m00422B6EFEA829BCB116D71
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 70009
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 70785
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 GridLayout_CellToLocalInterpolated_mE1FC35F36111BD0881573C6F51C37239BF3BD621 (GridLayout_tAD661B1E1E57C16BE21C8C13432EA04FE1F0418B* __this, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_cellPosition, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -160,7 +171,7 @@ IL_000f:
 		return L_2;
 	}
 }
-// Method Definition Index: 70010
+// Method Definition Index: 70786
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 GridLayout_LocalToWorld_m4714A4DAF4FF9545E9CCB3A8ACB5731A498D9CA6 (GridLayout_tAD661B1E1E57C16BE21C8C13432EA04FE1F0418B* __this, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_localPosition, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -198,14 +209,14 @@ IL_000f:
 		return L_2;
 	}
 }
-// Method Definition Index: 70011
+// Method Definition Index: 70787
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void GridLayout_DoNothing_mA280987BF98D257023D46C2C01902FC82EE6A00A (GridLayout_tAD661B1E1E57C16BE21C8C13432EA04FE1F0418B* __this, const RuntimeMethod* method) 
 {
 	{
 		return;
 	}
 }
-// Method Definition Index: 70012
+// Method Definition Index: 70788
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void GridLayout__ctor_m9266D2F9A58091E4214E9E5B69C0E5350F344828 (GridLayout_tAD661B1E1E57C16BE21C8C13432EA04FE1F0418B* __this, const RuntimeMethod* method) 
 {
 	{
@@ -213,7 +224,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void GridLayout__ctor_m9266D2F9A58091E4214E9E
 		return;
 	}
 }
-// Method Definition Index: 70013
+// Method Definition Index: 70789
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void GridLayout_CellToLocalInterpolated_Injected_mB16B7B8062F5DF8F78BF270B9D5E7B6BA8CEB3EE (intptr_t ___0__unity_self, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* ___1_cellPosition, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* ___2_ret, const RuntimeMethod* method) 
 {
 	typedef void (*GridLayout_CellToLocalInterpolated_Injected_mB16B7B8062F5DF8F78BF270B9D5E7B6BA8CEB3EE_ftn) (intptr_t, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2*, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2*);
@@ -222,7 +233,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void GridLayout_CellToLocalInterpolated_Injec
 	_il2cpp_icall_func = (GridLayout_CellToLocalInterpolated_Injected_mB16B7B8062F5DF8F78BF270B9D5E7B6BA8CEB3EE_ftn)il2cpp_codegen_resolve_icall ("UnityEngine.GridLayout::CellToLocalInterpolated_Injected(System.IntPtr,UnityEngine.Vector3&,UnityEngine.Vector3&)");
 	_il2cpp_icall_func(___0__unity_self, ___1_cellPosition, ___2_ret);
 }
-// Method Definition Index: 70014
+// Method Definition Index: 70790
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void GridLayout_LocalToWorld_Injected_mBF494266A8A287F7076B07952A03AFD0BAC008C0 (intptr_t ___0__unity_self, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* ___1_localPosition, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* ___2_ret, const RuntimeMethod* method) 
 {
 	typedef void (*GridLayout_LocalToWorld_Injected_mBF494266A8A287F7076B07952A03AFD0BAC008C0_ftn) (intptr_t, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2*, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2*);
@@ -234,7 +245,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void GridLayout_LocalToWorld_Injected_mBF4942
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-// Method Definition Index: 38225
+// Method Definition Index: 38274
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR intptr_t MarshalledUnityObject_MarshalNotNull_TisRuntimeObject_mEB1AA6B672D00242BB9DCE007056EC0E9C8DB075_gshared_inline (RuntimeObject* ___0_obj, const RuntimeMethod* method) 
 {
 	intptr_t V_0;
