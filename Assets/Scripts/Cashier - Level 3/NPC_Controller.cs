@@ -41,49 +41,53 @@ public class NPCController : MonoBehaviour
     public TextMeshProUGUI scoreDisplay;
 
     // ✅ Default question set with inline solutions (commas instead of new lines)
+    // ✅ Expanded, dialogue-friendly default question set
+    // ✅ Balanced-length default question set (short but complete)
     private static readonly List<(string question, string answer, string[] choices, string solution)> defaultQuestions =
         new List<(string, string, string[], string)>
     {
-        ("A COFFEE SHOP USES 2.5 KG OF COFFEE BEANS EVERY DAY. BAGS ARE 12 KG EACH. HOW MANY BAGS ARE NEEDED FOR 14 DAYS?",
-         "3 BAGS", new string[]{"3 BAGS", "4 BAGS", "5 BAGS"},
-         "SOLUTION: 2.5 × 14 = 35 kg, 35 ÷ 12 = 2.92 ≈ 3 bags"),
+        ("A household receives a ₱1,500 water bill. They get a 20% senior discount but only on the first ₱1,000. What is their final payment?",
+        "₱1,300", new string[]{"₱1,200","₱1,300","₱1,350"},
+        "SOLUTION: 20% of ₱1,000=₱200, ₱1,500−₱200=₱1,300."),
 
-        ("A SCHOOL REPLACES 85 BULBS. SINGLE: P150 EACH, OR 12 FOR P585. WHAT IS THE TOTAL MINIMUM COST?",
-         "P4245.00", new string[]{"P4245.00", "P4950.00", "P5010.00"},
-         "SOLUTION: 7 boxes = 84 bulbs, 7 × 585 = 4095, +1 bulb = 150, 4095 + 150 = 4245"),
+        ("A coffee shop uses 2.5 kg of beans daily. Each bag has 12 kg. How many bags are needed for 14 days?",
+        "3 BAGS", new string[]{"3 BAGS","4 BAGS","5 BAGS"},
+        "SOLUTION: 2.5×14=35 kg, 35÷12≈2.9 = 3 bags."),
 
-        ("2.5 LITERS OF PAINT COVER 20 SQM. HOW MANY LITERS FOR 70 SQM?",
-         "8.75 LITERS", new string[]{"7.5 LITERS", "8.75 LITERS", "10.0 LITERS"},
-         "SOLUTION: 70 × (2.5 ÷ 20) = 8.75 liters"),
+        ("A school replaces 85 bulbs. A box of 12 costs ₱585, while one bulb is ₱150. What is the lowest total cost?",
+        "₱4,245.00", new string[]{"₱4,245.00","₱4,950.00","₱5,010.00"},
+        "SOLUTION: 7 boxes (₱585×7=₱4,095) + 1 bulb (₱150)=₱4,245."),
 
-        ("A SOUVENIR COSTS $150. EXCHANGE RATE: P55 = $1. HOW MUCH IN PESOS?",
-         "P8250.00", new string[]{"P8400.00", "P8250.00", "P7950.00"},
-         "SOLUTION: 150 × 55 = 8250 pesos"),
+        ("2.5 liters of paint cover 20 sqm. How many liters are needed for 70 sqm?",
+        "8.75 LITERS", new string[]{"7.5 LITERS","8.75 LITERS","10.0 LITERS"},
+        "SOLUTION: 2.5 ÷ 20=0.125 per sqm, 0.125×70=8.75L."),
 
-        ("200G OF BUTTER MAKES 24 COOKIES. HOW MUCH FOR 60 COOKIES?",
-         "500 G", new string[]{"400 G", "500 G", "600 G"},
-         "SOLUTION: (60 ÷ 24) × 200 = 500 g"),
+        ("A traveler buys a $150 souvenir. If ₱55 equals $1, how much will it cost in pesos?",
+        "₱8,250.00", new string[]{"₱8,400.00","₱8,250.00","₱7,950.00"},
+        "SOLUTION: 150×55=₱8,250."),
 
-        ("A VAN TRAVELS 360 KM USING 45L. WITH 10L LEFT, HOW FAR CAN IT GO?",
-         "80 KM", new string[]{"80 KM", "90 KM", "100 KM"},
-         "SOLUTION: 360 ÷ 45 = 8 km/L, 10 × 8 = 80 km"),
+        ("A baker uses 200g of butter for 24 cookies. How much is needed for 60 cookies?",
+        "500 G", new string[]{"400 G","500 G","600 G"},
+        "SOLUTION: (60÷24)=2.5×200=500g."),
 
-        ("A BOX OF 10 PENS COSTS P80. A SINGLE PEN COSTS P10. HOW MUCH IS SAVED PER PEN?",
-         "P2.00", new string[]{"P1.00", "P1.50", "P2.00"},
-         "SOLUTION: 10 × 10 = 100, 100 − 80 = 20, 20 ÷ 10 = 2 per pen"),
+        ("A van travels 360 km using 45L of fuel. With 10L left, how far can it go?",
+        "80 KM", new string[]{"80 KM","90 KM","100 KM"},
+        "SOLUTION: 360÷45=8 km/L, 8×10=80 km."),
 
-        ("A 500 KM TRIP USES 10L PER 100 KM. FUEL COSTS P50/L. WHAT IS THE TOTAL COST?",
-         "P2500.00", new string[]{"P2000.00", "P2500.00", "P3000.00"},
-         "SOLUTION: 500 ÷ 100 = 5, 5 × 10 = 50L, 50 × 50 = 2500 pesos"),
+        ("A box of 10 pens costs ₱80, but a single pen costs ₱10. How much is saved per pen when buying the box?",
+        "₱2.00", new string[]{"₱1.00","₱1.50","₱2.00"},
+        "SOLUTION: (10×₱10)=₱100, ₱100−₱80=₱20 saved = ₱2/pen."),
 
-        ("A MACHINE MAKES 150 ITEMS IN 20 MINUTES. HOW MANY IN 3 HOURS?",
-         "1350 ITEMS", new string[]{"900 ITEMS", "1125 ITEMS", "1350 ITEMS"},
-         "SOLUTION: 3 hr = 180 min, 180 ÷ 20 = 9, 150 × 9 = 1350 items"),
+        ("A 500 km trip uses 10L per 100 km. If fuel costs ₱50/L, what is the total cost?",
+        "₱2,500.00", new string[]{"₱2,000.00","₱2,500.00","₱3,000.00"},
+        "SOLUTION: 500÷100=5×10L=50L, 50×₱50=₱2,500."),
 
-        ("OUT OF 200 CUSTOMERS, 80% PREFER COFFEE. HOW MANY CUSTOMERS IS THAT?",
-         "160 CUSTOMERS", new string[]{"150 CUSTOMERS", "160", "170"},
-         "SOLUTION: 80% × 200 = 160 ")
+        ("A machine makes 150 items in 20 minutes. How many items can it make in 3 hours?",
+        "1,350 ITEMS", new string[]{"900 ITEMS","1,125 ITEMS","1,350 ITEMS"},
+        "SOLUTION: 3h=180min, 180÷20=9×150=1,350 items.")
     };
+
+
 
     private static List<(string question, string answer, string[] choices, string solution)> questions =
         new List<(string, string, string[], string)>(defaultQuestions);
@@ -268,7 +272,7 @@ public class NPCController : MonoBehaviour
 
     IEnumerator AnswerTimer()
     {
-        float timer = 10f;
+        float timer = 15f;
         timerText.gameObject.SetActive(true);
 
         while (timer > 0f)
