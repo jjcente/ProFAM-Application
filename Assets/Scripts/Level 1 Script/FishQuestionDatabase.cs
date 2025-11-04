@@ -35,7 +35,7 @@ new FishQuestion
 },
 new FishQuestion
 {
-    question = "    ) of a small rocket in meters after t seconds is modeled by the function H = 20t - 2t². What is the height of the rocket after 5 seconds?",
+    question = "The height (H) of a small rocket in meters after t seconds is modeled by the function H = 20t - 2t². What is the height of the rocket after 5 seconds?",
     multipleAnswer = new string[] { "40 m", "50 m", "60 m", "75 m" },
     correctIndex = 1,
     solution = "Substitute t = 5 into the function. H = 20(5) - 2(5^2) = 100 - 2(25) = 100-50 = 50 meters."
