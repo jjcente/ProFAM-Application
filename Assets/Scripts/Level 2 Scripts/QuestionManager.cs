@@ -32,13 +32,12 @@ public class QuestionManager : MonoBehaviour
         solutionText.gameObject.SetActive(false);
     }
 
-    public void AskQuestion(Bomb bomb, Question question, Action<bool> callback = null)
+   public void AskQuestion(Bomb bomb, Question question, Action<bool> callback = null)
     {
         currentBomb = bomb;
         answerCallback = callback;
         panel.SetActive(true);
 
-        // Show only the question initially
         questionText.text = question.question;
         solutionText.gameObject.SetActive(false);
         solutionText.text = "";
@@ -51,6 +50,7 @@ public class QuestionManager : MonoBehaviour
             answerButtons[i].onClick.AddListener(() => OnAnswerClicked(idx, question));
             answerTexts[i].text = question.answers.Length > i ? question.answers[i] : "";
             answerButtons[i].interactable = true;
+            answerButtons[i].image.color = Color.white; // reset color
         }
     }
 
@@ -58,15 +58,18 @@ public class QuestionManager : MonoBehaviour
     {
         bool ok = chosen == question.correctIndex;
 
-        // Show solution after player chooses
+        // Disable all buttons immediately
+        foreach (var btn in answerButtons)
+            btn.interactable = false;
+
+        // Show the solution
         solutionText.text = "Solution: " + question.solution;
         solutionText.gameObject.SetActive(true);
 
-        // Disable all buttons
-        foreach (var btn in answerButtons) btn.interactable = false;
-
         if (ok)
         {
+            // ✅ Correct answer
+            answerButtons[chosen].image.color = Color.green;
             AudioManager.Instance.PlaySFX(correctClip);
             currentBomb?.Defuse();
             StartCoroutine(HidePanelAfterDelay());
@@ -74,25 +77,27 @@ public class QuestionManager : MonoBehaviour
         }
         else
         {
+            // ❌ Wrong answer
+            answerButtons[chosen].image.color = Color.red;
             AudioManager.Instance.PlaySFX(wrongClip);
-            StartCoroutine(HandleIncorrectAnswer(question));
+            StartCoroutine(HandleIncorrectAnswer(question, chosen));
         }
     }
 
-    private IEnumerator HandleIncorrectAnswer(Question question)
+    private IEnumerator HandleIncorrectAnswer(Question question, int chosen)
     {
         int correctIndex = question.correctIndex;
 
-        // Highlight the correct answer button
-        Color originalColor = answerButtons[correctIndex].image.color;
+        // Highlight correct button green
         answerButtons[correctIndex].image.color = Color.green;
 
         yield return new WaitForSeconds(showCorrectTime);
 
-        // Reset highlight
-        answerButtons[correctIndex].image.color = originalColor;
+        // Reset colors (optional)
+        answerButtons[chosen].image.color = Color.white;
+        answerButtons[correctIndex].image.color = Color.white;
 
-        // Explode the bomb
+        // Explode bomb and close panel
         currentBomb?.Explode();
         panel.SetActive(false);
 

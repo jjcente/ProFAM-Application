@@ -17,6 +17,10 @@ public class FeaturePanelManager : MonoBehaviour
     [TextArea]
     public string featureDescription = "Control a small fish that grows by eating smaller fish—but there’s a twist! Each fish carries a PISA-like question. Answer correctly to grow, answer wrong and shrink. Reach exactly 10 kg before the timer runs out to win!";
 
+public static void ForceResetState()
+{
+    IsFeatureActive = false;
+}
     private void Awake()
     {
         if (Instance != null && Instance != this)

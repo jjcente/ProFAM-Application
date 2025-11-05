@@ -23,10 +23,16 @@ public class FishQuestionManager : MonoBehaviour
 
     public static bool IsQuestionActive { get; private set; } = false;
     
-
-    private FishQuestionHolder currentFish; 
     
+
+    private FishQuestionHolder currentFish;
+
     public static event System.Action<FishQuestion> OnQuestionAnswered;
+    
+    public static void ForceResetState()
+{
+    IsQuestionActive = false;
+}
 
 
     private void Awake()

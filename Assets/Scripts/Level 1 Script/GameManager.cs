@@ -44,7 +44,17 @@ public class GameManager : MonoBehaviour
     {
         // Reassign the timer UI in the new scene
         timerText = FindFirstObjectByType<TMP_Text>();
-        StartGame();
+
+        if (FishAudioManager.Instance != null)
+    {
+        FishAudioManager.Instance.RestartBackgroundAudio();
+    }
+    else
+    {
+        Debug.LogWarning("⚠️ No FishAudioManager found in scene — background audio won't play!");
+    }
+
+        StartGame();    
     }
 
     public void StartGame()
@@ -54,8 +64,10 @@ public class GameManager : MonoBehaviour
         isGameActive = true;
         hasWon = false;
 
+
         UpdateTimerUI();
         StartCoroutine(TimerCoroutine());
+
     }
 
     private IEnumerator TimerCoroutine()
