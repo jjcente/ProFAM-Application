@@ -81,12 +81,20 @@ public class GameManager : MonoBehaviour
 
         if (remainingTime <= 0 && !hasWon)
         {
+
+            if (FishQuestionManager.Instance != null)
+{
+    FishQuestionManager.Instance.ForceCloseQuestionPanel();
+}
             // Time's up → reset questions & reload scene
             if (FishQuestionManager.Instance?.questionDatabase != null)
             {
                 FishQuestionManager.Instance.questionDatabase.ResetQuestions();
                 Debug.Log("✅ Questions reset for new game.");
             }
+
+
+    StopAllCoroutines(); // ✅ stops only GameManager coroutines
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
