@@ -28,6 +28,16 @@ public class FishQuestionManager : MonoBehaviour
     private FishQuestionHolder currentFish;
 
     public static event System.Action<FishQuestion> OnQuestionAnswered;
+
+    public static bool IsInCooldown { get; private set; } = false;
+
+private IEnumerator PostQuestionCooldown()
+{
+    IsInCooldown = true;
+    yield return new WaitForSeconds(0.5f); // adjust delay as needed
+    IsInCooldown = false;
+}
+
     
     public static void ForceResetState()
 {
@@ -107,7 +117,11 @@ public class FishQuestionManager : MonoBehaviour
 
 private void OnAnswerSelected(int selectedIndex)
 {
-     if (currentQuestion == null) return;
+        if (currentQuestion == null) return;
+     
+       foreach (var btn in answerButtons)
+        btn.interactable = false;
+
 
     for (int i = 0; i < currentQuestion.multipleAnswer.Length; i++)
     {
@@ -164,6 +178,38 @@ private void OnAnswerSelected(int selectedIndex)
 
         // Reset button colors for next question
         foreach (Button btn in answerButtons)
+        {
             btn.image.color = defaultColor;
+            btn.interactable = true; // ✅ re-enable buttons
+        }
+
+        StartCoroutine(PostQuestionCooldown());
+
     }
+    
+    public void ForceCloseQuestionPanel()
+{
+    // Force close the question UI
+    if (panel != null)
+        panel.SetActive(false);
+
+    // Reset all control flags
+    IsQuestionActive = false;
+    IsInCooldown = false;
+
+    // Re-enable player movement
+    PlayerDragController player = FindFirstObjectByType<PlayerDragController>();
+    if (player != null)
+        player.enabled = true;
+
+    // Re-enable fish movement
+    foreach (var fish in FindObjectsByType<FishQuestionHolder>(FindObjectsSortMode.None))
+    {
+        var ai = fish.GetComponent<FishMovement>();
+        if (ai != null)
+            ai.enabled = true;
+    }
+
+    Debug.Log("🐟 ForceCloseQuestionPanel(): Re-enabled all movement and closed panel.");
+}
 }

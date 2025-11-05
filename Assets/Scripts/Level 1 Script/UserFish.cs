@@ -9,7 +9,10 @@ public class PlayerDragController : MonoBehaviour
     private PlayerGrowth playerGrowth;
 
     private bool canOpenQuestion = true;   // cooldown control
-    public float questionCooldown = 2f;  
+    public float questionCooldown = 2f;
+
+
+public static bool IsInCooldown { get; private set; } = false;
 
 
     void Start()
@@ -77,9 +80,10 @@ public class PlayerDragController : MonoBehaviour
 
        private void OnTriggerEnter2D(Collider2D collision)
     {
-        FishAudioManager.Instance.PlayPlayerBite();
-    if (!canOpenQuestion || FishQuestionManager.IsQuestionActive || FeaturePanelManager.IsFeatureActive || PauseMenu.isPaused)
+
+        if (!canOpenQuestion || FishQuestionManager.IsQuestionActive || FeaturePanelManager.IsFeatureActive || PauseMenu.isPaused || FishQuestionManager.IsInCooldown)
             return; // prevent re-trigger spam
+        FishAudioManager.Instance.PlayPlayerBite();
 
         FishQuestionHolder smallFish = collision.GetComponent<FishQuestionHolder>();
         if (smallFish != null)
