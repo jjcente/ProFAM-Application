@@ -60,6 +60,7 @@ public class ResultManager : MonoBehaviour
             exitButton.onClick.RemoveAllListeners();
             exitButton.onClick.AddListener(() =>
             {
+
                 ResetAllExceptMenuAndLoading();
                 SceneManager.LoadScene(0); // Go back to main menu
             });

@@ -4467,7 +4467,7 @@ MonoBehaviour:
   bubblesSource: {fileID: 1688401871}
   waterSource: {fileID: 1688401872}
   sfxSource: {fileID: 1688401869}
-  backgroundMusic: {fileID: 0}
+  backgroundMusic: {fileID: 8300000, guid: e4db6e382c86d578dbe1a86f6341e491, type: 3}
   bubbles: {fileID: 8300000, guid: 4ed15744a8a2bed549064a25567109f6, type: 3}
   water: {fileID: 8300000, guid: 529e4b1ed8418f90182f3acb7492d276, type: 3}
   playerGrow: {fileID: 8300000, guid: be1059501e4eecbd2930faf6bd2ca208, type: 3}
