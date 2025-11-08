@@ -7,7 +7,7 @@ Each level presents a unique scenario that challenges players to apply mathemati
 ---
 
 ## 🧩 Game Concept
-The game integrates **PISA-like math questions** within different gameplay mechanics, where players must answer questions correctly to progress or survive. Each level increases in complexity and cognitive demand, following the **PISA 2022 Mathematics Framework** (see Figure 3 of the project documentation).
+The game integrates **PISA-like math questions** within different gameplay mechanics, where players must answer questions correctly to progress or survive. Each level increases in complexity and cognitive demand, following the **PISA 2022 Mathematics Framework**.
 
 ---
 
