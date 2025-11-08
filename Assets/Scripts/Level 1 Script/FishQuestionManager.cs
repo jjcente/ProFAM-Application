@@ -22,8 +22,6 @@ public class FishQuestionManager : MonoBehaviour
     private Color wrongColor = Color.red;
 
     public static bool IsQuestionActive { get; private set; } = false;
-    
-    
 
     private FishQuestionHolder currentFish;
 
@@ -31,19 +29,17 @@ public class FishQuestionManager : MonoBehaviour
 
     public static bool IsInCooldown { get; private set; } = false;
 
-private IEnumerator PostQuestionCooldown()
-{
-    IsInCooldown = true;
-    yield return new WaitForSeconds(0.5f); // adjust delay as needed
-    IsInCooldown = false;
-}
+    private IEnumerator PostQuestionCooldown()
+    {
+        IsInCooldown = true;
+        yield return new WaitForSeconds(0.5f); // adjust delay as needed
+        IsInCooldown = false;
+    }
 
-    
     public static void ForceResetState()
-{
-    IsQuestionActive = false;
-}
-
+    {
+        IsQuestionActive = false;
+    }
 
     private void Awake()
     {
@@ -84,132 +80,146 @@ private IEnumerator PostQuestionCooldown()
         ShowQuestion(question);
     }
 
-   public void ShowQuestion(FishQuestion question, FishQuestionHolder fish = null)
-{
-    if (question == null) return;
-
-    currentQuestion = question;
-    currentFish = fish; // save reference
-
-    panel.SetActive(true);
-    solutionText.gameObject.SetActive(false);
-    IsQuestionActive = true;
-
-    questionText.text = question.question;
-
-    for (int i = 0; i < answerButtons.Length; i++)
+    public void ShowQuestion(FishQuestion question, FishQuestionHolder fish = null)
     {
-        if (i < question.multipleAnswer.Length)
+        if (question == null) return;
+
+        currentQuestion = question;
+        currentFish = fish; // save reference
+
+        panel.SetActive(true);
+        solutionText.gameObject.SetActive(false);
+        IsQuestionActive = true;
+
+        questionText.text = question.question;
+
+        for (int i = 0; i < answerButtons.Length; i++)
         {
-            answerButtons[i].gameObject.SetActive(true);
-            int index = i;
-            answerButtons[i].GetComponentInChildren<TMP_Text>().text = question.multipleAnswer[i];
-            answerButtons[i].image.color = defaultColor;
-            answerButtons[i].onClick.RemoveAllListeners();
-            answerButtons[i].onClick.AddListener(() => OnAnswerSelected(index));
-        }
-        else
-        {
-            answerButtons[i].gameObject.SetActive(false);
+            if (i < question.multipleAnswer.Length)
+            {
+                answerButtons[i].gameObject.SetActive(true);
+                int index = i;
+                answerButtons[i].GetComponentInChildren<TMP_Text>().text = question.multipleAnswer[i];
+                answerButtons[i].image.color = defaultColor;
+                answerButtons[i].onClick.RemoveAllListeners();
+                answerButtons[i].onClick.AddListener(() => OnAnswerSelected(index));
+            }
+            else
+            {
+                answerButtons[i].gameObject.SetActive(false);
+            }
         }
     }
-}
 
-private void OnAnswerSelected(int selectedIndex)
-{
+    private void OnAnswerSelected(int selectedIndex)
+    {
         if (currentQuestion == null) return;
-     
-       foreach (var btn in answerButtons)
-        btn.interactable = false;
 
+        foreach (var btn in answerButtons)
+            btn.interactable = false;
 
-    for (int i = 0; i < currentQuestion.multipleAnswer.Length; i++)
-    {
-        if (i == currentQuestion.correctIndex)
-            answerButtons[i].image.color = correctColor;
-        else if (i == selectedIndex)
-            answerButtons[i].image.color = wrongColor;
-        else
-            answerButtons[i].image.color = defaultColor;
-    }
+        // Highlight correct/wrong answers
+        for (int i = 0; i < currentQuestion.multipleAnswer.Length; i++)
+        {
+            if (i == currentQuestion.correctIndex)
+                answerButtons[i].image.color = correctColor;
+            else if (i == selectedIndex)
+                answerButtons[i].image.color = wrongColor;
+            else
+                answerButtons[i].image.color = defaultColor;
+        }
 
-    solutionText.gameObject.SetActive(true);
+        // Show the solution
+        solutionText.gameObject.SetActive(true);
         solutionText.text = "Solution: " + currentQuestion.solution;
-    
-    PlayerGrowth playerGrowth = FindFirstObjectByType<PlayerGrowth>();
 
+        PlayerGrowth playerGrowth = FindFirstObjectByType<PlayerGrowth>();
 
-        // Destroy the fish only if the answer is correct
+        // Correct answer → grow and destroy fish
         if (selectedIndex == currentQuestion.correctIndex)
         {
-            // Correct answer → grow
             if (playerGrowth != null)
                 playerGrowth.GrowBy(currentFish.pointValue);
-                 FishAudioManager.Instance.PlayPlayerBite();
+
+            FishAudioManager.Instance.PlayPlayerBite();
 
             questionDatabase.MarkQuestionAsAnswered(currentQuestion);
             OnQuestionAnswered?.Invoke(currentQuestion);
 
-            // Destroy the fish
             if (currentFish != null)
                 Destroy(currentFish.gameObject);
         }
         else
         {
-
-            // Wrong answer → shrink
+            // Wrong answer → shrink but fish stays alive
             if (playerGrowth != null)
                 playerGrowth.Shrink();
-
-            // Fish stays alive
         }
-    questionDatabase.MarkQuestionAsAnswered(currentQuestion);
-    OnQuestionAnswered?.Invoke(currentQuestion);
 
-    StartCoroutine(HidePanelAfterDelay(3f));
-}
+        questionDatabase.MarkQuestionAsAnswered(currentQuestion);
+        OnQuestionAnswered?.Invoke(currentQuestion);
+
+        // ✅ Wait for player tap instead of auto-hiding
+        StartCoroutine(WaitForPlayerTapToClose());
+    }
+
+    private IEnumerator WaitForPlayerTapToClose()
+    {
+        // Small delay so the tap used for answering doesn’t close immediately
+        yield return new WaitForSeconds(0.3f);
+
+        // Wait until the player taps or clicks anywhere on the screen
+        yield return new WaitUntil(() => Input.GetMouseButtonDown(0) || Input.touchCount > 0);
+
+        // Hide the panel after tap
+        panel.SetActive(false);
+        IsQuestionActive = false;
+
+        // Reset buttons for next question
+        foreach (Button btn in answerButtons)
+        {
+            btn.image.color = defaultColor;
+            btn.interactable = true;
+        }
+
+        StartCoroutine(PostQuestionCooldown());
+    }
+
     private IEnumerator HidePanelAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
 
         panel.SetActive(false);
-
         IsQuestionActive = false;
 
-        // Reset button colors for next question
         foreach (Button btn in answerButtons)
         {
             btn.image.color = defaultColor;
-            btn.interactable = true; // ✅ re-enable buttons
+            btn.interactable = true;
         }
 
         StartCoroutine(PostQuestionCooldown());
-
     }
-    
+
     public void ForceCloseQuestionPanel()
-{
-    // Force close the question UI
-    if (panel != null)
-        panel.SetActive(false);
-
-    // Reset all control flags
-    IsQuestionActive = false;
-    IsInCooldown = false;
-
-    // Re-enable player movement
-    PlayerDragController player = FindFirstObjectByType<PlayerDragController>();
-    if (player != null)
-        player.enabled = true;
-
-    // Re-enable fish movement
-    foreach (var fish in FindObjectsByType<FishQuestionHolder>(FindObjectsSortMode.None))
     {
-        var ai = fish.GetComponent<FishMovement>();
-        if (ai != null)
-            ai.enabled = true;
-    }
+        if (panel != null)
+            panel.SetActive(false);
 
-    Debug.Log("🐟 ForceCloseQuestionPanel(): Re-enabled all movement and closed panel.");
-}
+        IsQuestionActive = false;
+        IsInCooldown = false;
+
+        PlayerDragController player = FindFirstObjectByType<PlayerDragController>();
+        if (player != null)
+            player.enabled = true;
+
+        foreach (var fish in FindObjectsByType<FishQuestionHolder>(FindObjectsSortMode.None))
+        {
+            var ai = fish.GetComponent<FishMovement>();
+            if (ai != null)
+                ai.enabled = true;
+        }
+
+        Debug.Log("🐟 ForceCloseQuestionPanel(): Re-enabled all movement and closed panel.");
+    }
 }
