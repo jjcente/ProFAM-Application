@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.EventSystems; // <-- needed for IsPointerOverGameObject
+using UnityEngine.EventSystems;
 using System.Collections;
 
 public class PlayerDragController : MonoBehaviour
@@ -8,81 +8,106 @@ public class PlayerDragController : MonoBehaviour
     private Vector3 targetPosition;
     private PlayerGrowth playerGrowth;
 
-    private bool canOpenQuestion = true;   // cooldown control
+    private bool canOpenQuestion = true;
     public float questionCooldown = 2f;
 
-
-public static bool IsInCooldown { get; private set; } = false;
-
+    private bool isDragging = false;
+    public static bool IsInCooldown { get; private set; } = false;
 
     void Start()
     {
-        targetPosition = transform.position; // initialize
-
-            playerGrowth = GetComponent<PlayerGrowth>();
-
+        targetPosition = transform.position;
+        playerGrowth = GetComponent<PlayerGrowth>();
     }
 
     void Update()
     {
-    if (FishQuestionManager.IsQuestionActive || FeaturePanelManager.IsFeatureActive || PauseMenu.isPaused)
+        if (FishQuestionManager.IsQuestionActive || FeaturePanelManager.IsFeatureActive || PauseMenu.isPaused)
             return;
-        
-        HandleInput();    // <--- call it here
+
+        HandleInput();
         MovePlayer();
         FlipSprite();
     }
 
-    // <--- PUT THE METHOD HERE
     private void HandleInput()
     {
         if (EventSystem.current == null)
-            return; // avoid null reference if EventSystem is missing
+            return;
 
-        // Editor: mouse input
-        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+#if UNITY_EDITOR || UNITY_STANDALONE
+        // --- Mouse drag control ---
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            isDragging = true;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            isDragging = false;
+        }
+
+        if (isDragging)
         {
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = 0f;
             targetPosition = Camera.main.ScreenToWorldPoint(mousePos);
             targetPosition.z = 0f;
         }
+#endif
 
-        // Mobile: touch input
+#if UNITY_ANDROID || UNITY_IOS
+        // --- Touch drag control ---
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            if (!EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+
+            switch (touch.phase)
             {
-                Vector3 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
-                touchPos.z = 0f;
-                targetPosition = touchPos;
+                case TouchPhase.Began:
+                    if (!EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+                        isDragging = true;
+                    break;
+
+                case TouchPhase.Moved:
+                    if (isDragging)
+                    {
+                        Vector3 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
+                        touchPos.z = 0f;
+                        targetPosition = touchPos;
+                    }
+                    break;
+
+                case TouchPhase.Ended:
+                case TouchPhase.Canceled:
+                    isDragging = false;
+                    break;
             }
         }
+#endif
     }
 
     private void MovePlayer()
     {
-        transform.position = Vector3.Lerp(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        if (isDragging)
+            transform.position = Vector3.Lerp(transform.position, targetPosition, moveSpeed * Time.deltaTime);
     }
 
-  private void FlipSprite()
-{
-    if (playerGrowth == null)
-        return;
-
-    // Get direction: 1 = right, -1 = left
-    float direction = (targetPosition.x > transform.position.x) ? 1f : -1f;
-
-    // Flip using PlayerGrowth so it keeps its current size
-    playerGrowth.FlipDirection(direction);
-}
-
-       private void OnTriggerEnter2D(Collider2D collision)
+    private void FlipSprite()
     {
+        if (playerGrowth == null)
+            return;
 
-        if (!canOpenQuestion || FishQuestionManager.IsQuestionActive || FeaturePanelManager.IsFeatureActive || PauseMenu.isPaused || FishQuestionManager.IsInCooldown)
-            return; // prevent re-trigger spam
+        float direction = (targetPosition.x > transform.position.x) ? 1f : -1f;
+        playerGrowth.FlipDirection(direction);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!canOpenQuestion || FishQuestionManager.IsQuestionActive ||
+            FeaturePanelManager.IsFeatureActive || PauseMenu.isPaused ||
+            FishQuestionManager.IsInCooldown)
+            return;
+
         FishAudioManager.Instance.PlayPlayerBite();
 
         FishQuestionHolder smallFish = collision.GetComponent<FishQuestionHolder>();
@@ -92,8 +117,8 @@ public static bool IsInCooldown { get; private set; } = false;
             StartCoroutine(QuestionCooldown());
         }
     }
-    
-       private IEnumerator QuestionCooldown()
+
+    private IEnumerator QuestionCooldown()
     {
         canOpenQuestion = false;
         yield return new WaitForSeconds(questionCooldown);
