@@ -12,6 +12,9 @@ public class PlayerDragController : MonoBehaviour
     public float questionCooldown = 2f;
 
     private bool isDragging = false;
+    private Vector3 dragStartPosition; // for detecting real drag
+    private float dragThreshold = 0.2f; // how far the finger must move to start dragging
+
     public static bool IsInCooldown { get; private set; } = false;
 
     void Start()
@@ -36,45 +39,56 @@ public class PlayerDragController : MonoBehaviour
             return;
 
 #if UNITY_EDITOR || UNITY_STANDALONE
-        // --- Mouse drag control ---
+        // --- Mouse drag control (no tap movement) ---
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
-            isDragging = true;
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            isDragging = false;
+            dragStartPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            dragStartPosition.z = 0f;
+            isDragging = false; // not yet dragging until moved enough
         }
 
-        if (isDragging)
+        if (Input.GetMouseButton(0))
         {
-            Vector3 mousePos = Input.mousePosition;
-            mousePos.z = 0f;
-            targetPosition = Camera.main.ScreenToWorldPoint(mousePos);
-            targetPosition.z = 0f;
+            Vector3 currentPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            currentPos.z = 0f;
+
+            // Only start dragging after the mouse has moved past a small threshold
+            if (!isDragging && Vector3.Distance(dragStartPosition, currentPos) > dragThreshold)
+                isDragging = true;
+
+            if (isDragging)
+                targetPosition = currentPos;
         }
+
+        if (Input.GetMouseButtonUp(0))
+            isDragging = false;
 #endif
 
 #if UNITY_ANDROID || UNITY_IOS
-        // --- Touch drag control ---
+        // --- Touch drag control (no tap movement) ---
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
+            Vector3 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
+            touchPos.z = 0f;
 
             switch (touch.phase)
             {
                 case TouchPhase.Began:
                     if (!EventSystem.current.IsPointerOverGameObject(touch.fingerId))
-                        isDragging = true;
+                    {
+                        dragStartPosition = touchPos;
+                        isDragging = false;
+                    }
                     break;
 
                 case TouchPhase.Moved:
+                    // Only move if finger moves beyond small threshold
+                    if (!isDragging && Vector3.Distance(dragStartPosition, touchPos) > dragThreshold)
+                        isDragging = true;
+
                     if (isDragging)
-                    {
-                        Vector3 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
-                        touchPos.z = 0f;
                         targetPosition = touchPos;
-                    }
                     break;
 
                 case TouchPhase.Ended:
