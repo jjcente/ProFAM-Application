@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections;
 using TMPro;
 using UnityEngine.SceneManagement;
-using NUnit.Framework;
 
 public class BombManager : MonoBehaviour
 {
@@ -33,6 +32,8 @@ public class BombManager : MonoBehaviour
     public string nextSceneName = "Level 3";
     public AudioClip winClip;
 
+    private BombDefusedCounter bombDefusedCounter;
+
     private void Awake()
     {
         Instance = this;
@@ -43,6 +44,12 @@ public class BombManager : MonoBehaviour
         timer = sharedTime;
         SpawnBombs();
         UpdateTimerUI();
+
+        bombDefusedCounter = FindFirstObjectByType<BombDefusedCounter>();
+        if (bombDefusedCounter != null)
+        {
+            bombDefusedCounter.Initialize(bombCount);
+        }
     }
 
     void Update()
@@ -96,6 +103,11 @@ public class BombManager : MonoBehaviour
     public void OnBombDefused(Bomb b)
     {
         defused++;
+
+        // ✅ Update UI Counter
+        if (bombDefusedCounter != null)
+            bombDefusedCounter.OnBombDefused(defused);
+
         if (defused >= bombCount)
         {
             levelOver = true;
@@ -167,7 +179,6 @@ public class BombManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         Debug.Log("➡️ Loading next level...");
 
-        // ✅ Instead of calling portal coroutine directly, use LoadingScreenManager
         if (!string.IsNullOrEmpty(nextSceneName))
         {
             LoadingScreenManager.LoadSceneByName(nextSceneName);
@@ -232,7 +243,12 @@ public class BombManager : MonoBehaviour
 
         defused = 0;
         levelOver = false;
+
         QuestionDatabase.Instance.ResetQuestions();
         SpawnBombs();
+
+        // Reset counter UI
+        if (bombDefusedCounter != null)
+            bombDefusedCounter.Initialize(bombCount);
     }
 }
