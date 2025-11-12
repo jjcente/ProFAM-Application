@@ -24,6 +24,7 @@ public class QuestionManager : MonoBehaviour
 
     private Bomb currentBomb;
     private Action<bool> answerCallback;
+    private Color defaultColor = Color.white;
 
     private void Awake()
     {
@@ -32,7 +33,7 @@ public class QuestionManager : MonoBehaviour
         solutionText.gameObject.SetActive(false);
     }
 
-   public void AskQuestion(Bomb bomb, Question question, Action<bool> callback = null)
+    public void AskQuestion(Bomb bomb, Question question, Action<bool> callback = null)
     {
         currentBomb = bomb;
         answerCallback = callback;
@@ -50,7 +51,7 @@ public class QuestionManager : MonoBehaviour
             answerButtons[i].onClick.AddListener(() => OnAnswerClicked(idx, question));
             answerTexts[i].text = question.answers.Length > i ? question.answers[i] : "";
             answerButtons[i].interactable = true;
-            answerButtons[i].image.color = Color.white; // reset color
+            answerButtons[i].image.color = defaultColor;
         }
     }
 
@@ -72,7 +73,7 @@ public class QuestionManager : MonoBehaviour
             answerButtons[chosen].image.color = Color.green;
             AudioManager.Instance.PlaySFX(correctClip);
             currentBomb?.Defuse();
-            StartCoroutine(HidePanelAfterDelay());
+            StartCoroutine(WaitForPlayerTapToClose(true)); // Wait for tap
             answerCallback?.Invoke(true);
         }
         else
@@ -93,20 +94,32 @@ public class QuestionManager : MonoBehaviour
 
         yield return new WaitForSeconds(showCorrectTime);
 
-        // Reset colors (optional)
-        answerButtons[chosen].image.color = Color.white;
-        answerButtons[correctIndex].image.color = Color.white;
+        // Wait for tap before closing
+        yield return StartCoroutine(WaitForPlayerTapToClose(false));
 
-        // Explode bomb and close panel
         currentBomb?.Explode();
-        panel.SetActive(false);
-
         answerCallback?.Invoke(false);
     }
 
-    private IEnumerator HidePanelAfterDelay()
+    private IEnumerator WaitForPlayerTapToClose(bool defused)
     {
-        yield return new WaitForSeconds(showCorrectTime);
+        // Small delay so the tap used for answering doesn’t instantly close it
+        yield return new WaitForSeconds(0.3f);
+
+        // Wait until the player taps or clicks anywhere on the screen
+        yield return new WaitUntil(() => Input.GetMouseButtonDown(0) || Input.touchCount > 0);
+
+        // Hide the panel after tap
         panel.SetActive(false);
+
+        // Reset buttons for next question
+        foreach (Button btn in answerButtons)
+        {
+            btn.image.color = defaultColor;
+            btn.interactable = true;
+        }
+
+        // Optional small cooldown to prevent instant reopen
+        yield return new WaitForSeconds(0.2f);
     }
 }

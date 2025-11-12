@@ -89,6 +89,7 @@ public class NPCController : MonoBehaviour
 
 
 
+
     private static List<(string question, string answer, string[] choices, string solution)> questions =
         new List<(string, string, string[], string)>(defaultQuestions);
 
@@ -258,6 +259,7 @@ public class NPCController : MonoBehaviour
         }
     }
 
+    // Modified to wait for player interaction (tap/click/key) instead of auto 4s
     IEnumerator ShowResultAndReturn(string result)
     {
         dialogueCanvas.transform.position = defaultDialoguePosition.position;
@@ -266,7 +268,13 @@ public class NPCController : MonoBehaviour
         dialogueCanvas.SetActive(true);
         timerText.gameObject.SetActive(false);
 
-        yield return new WaitForSeconds(4f);
+        // Small delay so the tap used for answering doesn’t close immediately
+        yield return new WaitForSeconds(0.3f);
+
+        // Wait until the player taps/clicks or presses any key
+        yield return new WaitUntil(() => Input.GetMouseButtonDown(0) || Input.touchCount > 0 || Input.anyKeyDown);
+
+        // After input, allow the Interact coroutine to continue
         waitingForAnswer = false;
     }
 
